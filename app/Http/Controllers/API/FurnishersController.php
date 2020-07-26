@@ -97,7 +97,7 @@ class FurnishersController extends Controller
                 'code'  => 200,
                 'message'   => 'OK'
             ],
-            'message'   => "Client's details"
+            'message'   => "Furnisher's details"
         ];
         if($furnisher == null){
             $meta['message'] = 'No data corresponded';

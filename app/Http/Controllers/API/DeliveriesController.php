@@ -4,6 +4,8 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Delivery;
+use Illuminate\Support\Facades\Validator;
 
 class DeliveriesController extends Controller
 {
@@ -14,17 +16,20 @@ class DeliveriesController extends Controller
      */
     public function index()
     {
-        //
-    }
+        $deliveries = Delivery::all();
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        $meta = [
+            'status' => [
+                'code'  => 200,
+                'message'   => 'OK'
+            ],
+            'message'   => 'List of deliveries'
+        ];
+
+        return response()->json([
+            'meta' => $meta,
+            'data' => $deliveries
+        ]);
     }
 
     /**
@@ -35,7 +40,45 @@ class DeliveriesController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validation = Validator::make($request->all(),[
+            'furnisher_id'       => 'required|integer',
+            'article_id'       => 'required|integer',
+            'quantity'       => 'required|integer',
+            'price'       => 'required|integer'
+        ]);
+
+        $meta = [
+            'status' => [
+                'code'  => 200,
+                'message'   => 'OK'
+            ],
+            'message'   => 'Delivery saved successful'
+        ];
+
+        if($validation->fails()){
+
+            $meta['status']['message'] = 'Validation error';
+            $meta['message'] = $validation->errors();
+
+            return response()->json([
+                'meta'  => $meta
+            ]);
+        }
+
+        $data = [
+            'furnisher_id'      => $request['furnisher_id'],
+            'article_id'      => $request['article_id'],
+            'user_id'      => 1,
+            'quantity'     => $request['quantity'],
+            'price'     => $request['price']
+        ];
+
+        $delivery = Delivery::create($data);
+
+        return response()->json([
+            'meta' => $meta,
+            'data' => $delivery
+        ]);
     }
 
     /**
@@ -46,18 +89,23 @@ class DeliveriesController extends Controller
      */
     public function show($id)
     {
-        //
-    }
+        $delivery = Delivery::find($id);
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+        $meta = [
+            'status' => [
+                'code'  => 200,
+                'message'   => 'OK'
+            ],
+            'message'   => "Category's details"
+        ];
+        if($delivery == null){
+            $meta['message'] = "No data corresponded";
+        }
+
+        return response()->json([
+            'meta' => $meta,
+            'data' => $delivery
+        ]);
     }
 
     /**

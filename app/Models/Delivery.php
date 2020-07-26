@@ -6,11 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Delivery extends Model
 {
-    protected $fillable = ['furnisher', 'product', 'quantity', 'date'];
+    protected $fillable = ['furnisher_id', 'article_id', 'user_id', 'quantity', 'price'];
 
-    public function product()
+    public function article()
     {
-        return $this->belongsTo('App\Models\Product');
+        return $this->belongsTo('App\Models\Article');
     }
 
     public function furnisher()

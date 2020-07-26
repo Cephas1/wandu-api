@@ -6,16 +6,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class Purchase extends Model
 {
-    protected $fillable = [];
+    protected $fillable = ['client_id', 'article_id', 'user_id', 'quantity', 'price'];
 
     public function client()
     {
         return $this->belongsTo('App\Models\Client');
     }
 
-    public function product()
+    public function article()
     {
-        return $this->belongsTo('App\Models\Product');
+        return $this->belongsTo('App\Models\Article');
     }
 
     public function user()

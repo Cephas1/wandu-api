@@ -18,6 +18,7 @@ class CreateDeliveriesTable extends Migration
             $table->integer('furnisher_id');
             $table->integer('article_id');
             $table->integer('quantity');
+            $table->integer('price');
             $table->integer('user_id');
             $table->timestamps();
         });

@@ -5,6 +5,8 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Article;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Validator;
 
 class ArticlesController extends Controller
 {
@@ -22,23 +24,13 @@ class ArticlesController extends Controller
                 'code'  => 200,
                 'message'   => 'OK'
             ],
-            'message'   => 'List of products'
+            'message'   => 'List of articles'
         ];
 
         return response()->json([
             'meta' => $meta,
             'data' => $products
         ]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -49,20 +41,46 @@ class ArticlesController extends Controller
      */
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
-            'nom'       => 'required|',
-            'observation'       => 'nullable|string',
-            'adresse'   => 'required',
-            'telephone' => 'required',
-            'email'     => 'required|email',
-            'siteweb'   => 'required',
-            'nbre_salarie'      => 'required|integer',
-            'dirigeant'         => 'nullable|string'
+        $validation = Validator::make($request->all(),[
+            'name'       => 'required|string',
+            'description'       => 'required|string|min:10',
+            'price'       => 'required|integer',
+            'category_id'       => 'required|integer',
+            'image_uri'       => 'nullable|image'
         ]);
 
-        $client = Client::create($validatedData);
-        $client->particulier = 0;
-        $client->save();
+        $meta = [
+            'status' => [
+                'code'  => 200,
+                'message'   => 'OK'
+            ],
+            'message'   => 'Article saved successful'
+        ];
+
+        if($validation->fails()){
+
+            $meta['status']['message'] = 'Validation error';
+            $meta['message'] = $validation->errors();
+
+            return response()->json([
+                'meta'  => $meta
+            ]);
+        }
+
+        $data = [
+            'name'      => $request['name'],
+            'description'      => $request['description'],
+            'price'     => $request['price'],
+            'quantity'     => 0,
+            'category_id'     => $request['category_id'],
+        ];
+
+        $article = Article::create($data);
+
+        return response()->json([
+            'meta' => $meta,
+            'data' => $article
+        ]);
     }
 
     /**
@@ -73,18 +91,23 @@ class ArticlesController extends Controller
      */
     public function show($id)
     {
+        $article = Article::where([['deleted_at', null],['id', $id]])->first();
 
-    }
+        $meta = [
+            'status' => [
+                'code'  => 200,
+                'message'   => 'OK'
+            ],
+            'message'   => "Article's details"
+        ];
+        if($article == null){
+            $meta['message'] = 'No data corresponded';
+        }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+        return response()->json([
+            'meta' => $meta,
+            'data' => $article
+        ]);
     }
 
     /**
@@ -107,6 +130,27 @@ class ArticlesController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $meta = [
+            'status' => [
+                'code'  => 200,
+                'message'   => 'OK'
+            ],
+            'message'   => 'Article deleted successful'
+        ];
+
+        $article = Article::find($id);
+
+        if($article->deleted_at == null){
+            $article->deleted_at = Carbon::now();
+            $article->save();
+
+        }else{
+            $meta['message'] = 'Article already deleted';
+        }
+
+        return response()->json([
+            'meta' => $meta,
+            'data' => 'id : ' . $id
+        ]);
     }
 }
