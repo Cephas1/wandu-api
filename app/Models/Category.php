@@ -8,5 +8,7 @@ class Category extends Model
 {
     protected $timestamp = false;
 
-    protected $fillable = ['name', 'unity'];
+    protected $fillable = ['name','code', 'unity'];
+
+    protected $hidden = ['deleted_at'];
 }

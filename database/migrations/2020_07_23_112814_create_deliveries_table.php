@@ -16,7 +16,7 @@ class CreateDeliveriesTable extends Migration
         Schema::create('deliveries', function (Blueprint $table) {
             $table->id();
             $table->integer('furnisher_id');
-            $table->integer('product_id');
+            $table->integer('article_id');
             $table->integer('quantity');
             $table->integer('user_id');
             $table->timestamps();
