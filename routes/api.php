@@ -14,13 +14,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+Route::middleware('auth:api')->group(function (){
+    Route::resource('categories', 'API\CategoriesController');
+    Route::resource('clients', 'API\ClientsController');
+    Route::resource('furnishers', 'API\FurnishersController');
+    Route::resource('articles', 'API\ArticlesController');
+    Route::resource('deliveries', 'API\DeliveriesController');
+    Route::resource('purchases', 'API\PurchasesController');
 });
-
-Route::resource('categories', 'API\CategoriesController');
-Route::resource('clients', 'API\ClientsController');
-Route::resource('furnishers', 'API\FurnishersController');
-Route::resource('articles', 'API\ArticlesController');
-Route::resource('deliveries', 'API\DeliveriesController');
-Route::resource('purchases', 'API\PurchasesController');

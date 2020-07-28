@@ -13,6 +13,15 @@
 					<passport-personal-access-tokens></passport-personal-access-tokens>	
                 </div>
             </div>
+            <div class="card">
+                <form method="post" action="{{ route('passport.clients.store') }}">
+                    @csrf
+                    <input type="text" name="name"/>
+                    <input type="text" name="redirect"/>
+                    <input type="hidden" name="confidential" value="1"/>
+                    <button type="submit">Send</button>
+                </form>
+            </div>
         </div>
     </div>
 </div>
