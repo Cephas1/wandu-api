@@ -140,7 +140,7 @@ class FurnishersController extends Controller
         $furnisher = Furnisher::find($id);
 
         if($furnisher->deleted_at == null){
-            $furnisher->deleted_at = Carbon::now();
+            $furnisher->deleted_at = now();
             $furnisher->save();
 
         }else{

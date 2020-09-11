@@ -15,12 +15,14 @@ class CreateArticlesTable extends Migration
     {
         Schema::create('articles', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->text('description');
-            $table->integer('price');
-            $table->integer('quantity');
-            $table->integer('category_id');
-            $table->dateTime('deleted_at')->nullable();
+            $table->string("name");
+            $table->text("description")->nullable();
+            $table->integer("price_1");
+            $table->integer("price_2");
+            $table->integer("price_3");
+            $table->integer("price_4");
+            $table->string("imageuri")->nullable();
+            $table->integer("category_id");
             $table->timestamps();
         });
     }
@@ -32,6 +34,6 @@ class CreateArticlesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('products');
+        Schema::dropIfExists('articles');
     }
 }

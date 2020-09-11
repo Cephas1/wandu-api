@@ -137,7 +137,7 @@ class CategoriesController extends Controller
         $category = Category::find($id);
 
         if($category->deleted_at == null){
-            $category->deleted_at = Carbon::now();
+            $category->deleted_at = now();
             $category->save();
 
         }else{

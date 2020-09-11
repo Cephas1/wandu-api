@@ -40,6 +40,7 @@ class PurchasesController extends Controller
      */
     public function store(Request $request)
     {
+        dd($request);
         $validation = Validator::make($request->all(),[
             'client_id'       => 'required|integer',
             'article_id'       => 'required|integer',

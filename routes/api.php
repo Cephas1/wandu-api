@@ -14,11 +14,20 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::resource('categories', 'API\CategoriesController');
+Route::resource('clients', 'API\ClientsController');
+Route::resource('furnishers', 'API\FurnishersController');
+Route::resource('articles', 'API\ArticlesController');
+Route::resource('deliveries', 'API\DeliveriesController');
+Route::resource('purchases', 'API\PurchasesController');
+
+Route::post('/login', 'API\Auth\LoginController@login');
+
 Route::middleware('auth:api')->group(function (){
-    Route::resource('categories', 'API\CategoriesController');
-    Route::resource('clients', 'API\ClientsController');
-    Route::resource('furnishers', 'API\FurnishersController');
-    Route::resource('articles', 'API\ArticlesController');
-    Route::resource('deliveries', 'API\DeliveriesController');
-    Route::resource('purchases', 'API\PurchasesController');
+//    Route::resource('categories', 'API\CategoriesController');
+//    Route::resource('clients', 'API\ClientsController');
+//    Route::resource('furnishers', 'API\FurnishersController');
+//    Route::resource('articles', 'API\ArticlesController');
+//    Route::resource('deliveries', 'API\DeliveriesController');
+//    Route::resource('purchases', 'API\PurchasesController');
 });

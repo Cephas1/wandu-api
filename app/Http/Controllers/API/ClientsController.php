@@ -140,7 +140,7 @@ class ClientsController extends Controller
         $client = Client::find($id);
 
         if($client->deleted_at == null){
-            $client->deleted_at = Carbon::now();
+            $client->deleted_at = now();
             $client->save();
 
         }else{
