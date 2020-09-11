@@ -17,6 +17,7 @@ class CreateRulesTable extends Migration
             $table->id();
             $table->string("name", 100);
             $table->string("code", 10);
+            $table->dateTime("deleted_at")->nullable();
             $table->timestamps();
         });
     }

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Model;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Spendtype extends Model
+class Storage_supplier extends Model
 {
     //
 }

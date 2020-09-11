@@ -22,6 +22,7 @@ class CreateArticleShopsTable extends Migration
             $table->dateTime("date");
             $table->integer("quantity");
             $table->integer("price_got");
+            $table->dateTime("deleted_at")->nullable();
             $table->timestamps();
         });
     }

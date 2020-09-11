@@ -23,6 +23,7 @@ class CreateArticlesTable extends Migration
             $table->integer("price_4");
             $table->string("imageuri")->nullable();
             $table->integer("category_id");
+            $table->dateTime("deleted_at")->nullable();
             $table->timestamps();
         });
     }

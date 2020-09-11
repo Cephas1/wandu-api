@@ -19,6 +19,7 @@ class CreateSuppliersTable extends Migration
             $table->string("location", 120)->nullable();
             $table->string("email", 100)->nullable();
             $table->string("phone", 25);
+            $table->dateTime("deleted_at")->nullable();
             $table->timestamps();
         });
     }

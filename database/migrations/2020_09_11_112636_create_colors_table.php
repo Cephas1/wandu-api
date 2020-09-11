@@ -16,6 +16,8 @@ class CreateColorsTable extends Migration
         Schema::create('colors', function (Blueprint $table) {
             $table->id();
             $table->string("name");
+            $table->string("hexa", 7);
+            $table->dateTime("deleted_at")->nullable();
             $table->timestamps();
         });
     }

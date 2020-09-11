@@ -19,6 +19,7 @@ class CreateStoragesTable extends Migration
             $table->string("location");
             $table->string("phone", 25);
             $table->string("email", 100)->unique()->nullable();
+            $table->dateTime("deleted_at")->nullable();
             $table->timestamps();
         });
     }

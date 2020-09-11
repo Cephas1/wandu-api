@@ -44,7 +44,10 @@ class ArticlesController extends Controller
         $validation = Validator::make($request->all(),[
             'name'       => 'required|string',
             'description'       => 'required|string|min:10',
-            'price'       => 'required|integer',
+            'price_1'       => 'required|integer',
+            'price_2'       => 'required|integer',
+            'price_3'       => 'required|integer',
+            'price_4'       => 'required|integer',
             'category_id'       => 'required|integer',
             'image_uri'       => 'nullable|image'
         ]);
@@ -70,7 +73,10 @@ class ArticlesController extends Controller
         $data = [
             'name'      => $request['name'],
             'description'      => $request['description'],
-            'price'     => $request['price'],
+            'price_1'     => $request['price_1'],
+            'price_2'     => $request['price_2'],
+            'price_3'     => $request['price_3'],
+            'price_4'     => $request['price_4'],
             'quantity'     => 0,
             'category_id'     => $request['category_id'],
         ];

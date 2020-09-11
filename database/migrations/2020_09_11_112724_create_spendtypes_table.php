@@ -16,6 +16,7 @@ class CreateSpendtypesTable extends Migration
         Schema::create('spendtypes', function (Blueprint $table) {
             $table->id();
             $table->string("name");
+            $table->dateTime("deleted_at")->nullable();
             $table->timestamps();
         });
     }

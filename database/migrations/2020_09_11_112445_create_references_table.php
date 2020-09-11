@@ -17,6 +17,7 @@ class CreateReferencesTable extends Migration
             $table->id();
             $table->string("name", 20);
             $table->string("number", 20);
+            $table->dateTime("deleted_at")->nullable();
             $table->timestamps();
         });
     }
