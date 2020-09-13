@@ -3,12 +3,11 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Models\Client;
+use App\Models\Spendtype;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Validator;
 
-class ClientsController extends Controller
+class SpendtypesController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,19 +16,19 @@ class ClientsController extends Controller
      */
     public function index()
     {
-        $clients = Client::where('deleted_at','=', null)->get();
+        $spendtypes = Spendtype::where('deleted_at','=', null)->get();
 
         $meta = [
             'status' => [
                 'code'  => 200,
                 'message'   => 'OK'
             ],
-            'message'   => 'List of clients'
+            'message'   => 'List of spendTypes'
         ];
 
         return response()->json([
             'meta' => $meta,
-            'data' => $clients
+            'data' => $spendtypes
         ]);
     }
 
@@ -43,10 +42,6 @@ class ClientsController extends Controller
     {
         $validation = Validator::make($request->all(),[
             'name'       => 'required|string',
-            'phone'       => 'required|string|max:30',
-            'address'       => 'required|string',
-            'email'       => 'required|string',
-            'image_uri'       => 'nullable|image'
         ]);
 
         $meta = [
@@ -54,7 +49,7 @@ class ClientsController extends Controller
                 'code'  => 200,
                 'message'   => 'OK'
             ],
-            'message'   => 'Client saved successful'
+            'message'   => 'SpendType saved successful'
         ];
 
         if($validation->fails()){
@@ -68,17 +63,14 @@ class ClientsController extends Controller
         }
 
         $data = [
-            'name'      => $request['name'],
-            'phone'      => $request['phone'],
-            'address'     => $request['address'],
-            'email'     => $request['email'],
+            'name'      => $request['name']
         ];
 
-        $client = Client::create($data);
+        $storage = Spendtype::create($data);
 
         return response()->json([
             'meta' => $meta,
-            'data' => $client
+            'data' => $storage
         ]);
     }
 
@@ -90,22 +82,22 @@ class ClientsController extends Controller
      */
     public function show($id)
     {
-        $client = Client::where([['deleted_at', null],['id', $id]])->first();
+        $spendtype = Spendtype::where([['deleted_at', null],['id', $id]])->first();
 
         $meta = [
             'status' => [
                 'code'  => 200,
                 'message'   => 'OK'
             ],
-            'message'   => "Client's details"
+            'message'   => "SpendType's details"
         ];
-        if($client == null){
+        if($spendtype == null){
             $meta['message'] = 'No data corresponded';
         }
 
         return response()->json([
             'meta' => $meta,
-            'data' => $client
+            'data' => $spendtype
         ]);
     }
 
@@ -134,17 +126,16 @@ class ClientsController extends Controller
                 'code'  => 200,
                 'message'   => 'OK'
             ],
-            'message'   => 'Client deleted successful'
+            'message'   => 'SpendType deleted successful'
         ];
 
-        $client = Client::find($id);
+        $supplier = Spendtype::find($id);
 
-        if($client->deleted_at == null){
-            $client->deleted_at = now();
-            $client->save();
-
+        if($supplier->deleted_at == null){
+            $supplier->deleted_at = now();
+            $supplier->save();
         }else{
-            $meta['message'] = 'Client already deleted';
+            $meta['message'] = 'SpendType already deleted';
         }
 
         return response()->json([

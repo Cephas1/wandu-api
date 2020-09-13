@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\Supplier;
 use Illuminate\Http\Request;
-use App\Models\Delivery;
 use Illuminate\Support\Facades\Validator;
 
-class DeliveriesController extends Controller
+class SuppliersController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,19 +16,19 @@ class DeliveriesController extends Controller
      */
     public function index()
     {
-        $deliveries = Delivery::all();
+        $suppliers = Supplier::where('deleted_at','=', null)->get();
 
         $meta = [
             'status' => [
                 'code'  => 200,
                 'message'   => 'OK'
             ],
-            'message'   => 'List of deliveries'
+            'message'   => 'List of suppliers'
         ];
 
         return response()->json([
             'meta' => $meta,
-            'data' => $deliveries
+            'data' => $suppliers
         ]);
     }
 
@@ -41,10 +41,10 @@ class DeliveriesController extends Controller
     public function store(Request $request)
     {
         $validation = Validator::make($request->all(),[
-            'furnisher_id'       => 'required|integer',
-            'article_id'       => 'required|integer',
-            'quantity'       => 'required|integer',
-            'price'       => 'required|integer'
+            'name'       => 'required|string',
+            'location'       => 'required|string',
+            'phone'       => 'required|string|max:30',
+            'email'       => 'required|string'
         ]);
 
         $meta = [
@@ -52,7 +52,7 @@ class DeliveriesController extends Controller
                 'code'  => 200,
                 'message'   => 'OK'
             ],
-            'message'   => 'Delivery saved successful'
+            'message'   => 'Supplier saved successful'
         ];
 
         if($validation->fails()){
@@ -66,18 +66,17 @@ class DeliveriesController extends Controller
         }
 
         $data = [
-            'furnisher_id'      => $request['furnisher_id'],
-            'article_id'      => $request['article_id'],
-            'user_id'      => 1,
-            'quantity'     => $request['quantity'],
-            'price'     => $request['price']
+            'name'      => $request['name'],
+            'phone'      => $request['phone'],
+            'location'     => $request['location'],
+            'email'     => $request['email'],
         ];
 
-        $delivery = Delivery::create($data);
+        $storage = Supplier::create($data);
 
         return response()->json([
             'meta' => $meta,
-            'data' => $delivery
+            'data' => $storage
         ]);
     }
 
@@ -89,22 +88,22 @@ class DeliveriesController extends Controller
      */
     public function show($id)
     {
-        $delivery = Delivery::find($id);
+        $storage = Supplier::where([['deleted_at', null],['id', $id]])->first();
 
         $meta = [
             'status' => [
                 'code'  => 200,
                 'message'   => 'OK'
             ],
-            'message'   => "Category's details"
+            'message'   => "Supplier's details"
         ];
-        if($delivery == null){
-            $meta['message'] = "No data corresponded";
+        if($storage == null){
+            $meta['message'] = 'No data corresponded';
         }
 
         return response()->json([
             'meta' => $meta,
-            'data' => $delivery
+            'data' => $storage
         ]);
     }
 
@@ -128,6 +127,26 @@ class DeliveriesController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $meta = [
+            'status' => [
+                'code'  => 200,
+                'message'   => 'OK'
+            ],
+            'message'   => 'Supplier deleted successful'
+        ];
+
+        $supplier = Supplier::find($id);
+
+        if($supplier->deleted_at == null){
+            $supplier->deleted_at = now();
+            $supplier->save();
+        }else{
+            $meta['message'] = 'Supplier already deleted';
+        }
+
+        return response()->json([
+            'meta' => $meta,
+            'data' => 'id : ' . $id
+        ]);
     }
 }

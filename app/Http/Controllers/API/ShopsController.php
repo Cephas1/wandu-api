@@ -3,12 +3,11 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Models\Category;
+use App\Models\Shop;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Validator;
 
-class CategoriesController extends Controller
+class ShopsController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,19 +16,19 @@ class CategoriesController extends Controller
      */
     public function index()
     {
-        $categories = Category::where('deleted_at','=', null)->get();
+        $shops = Shop::where('deleted_at','=', null)->get();
 
         $meta = [
             'status' => [
                 'code'  => 200,
                 'message'   => 'OK'
             ],
-            'message'   => 'List of categories'
+            'message'   => 'List of shops'
         ];
 
         return response()->json([
             'meta' => $meta,
-            'data' => $categories
+            'data' => $shops
         ]);
     }
 
@@ -42,7 +41,10 @@ class CategoriesController extends Controller
     public function store(Request $request)
     {
         $validation = Validator::make($request->all(),[
-            'name'       => 'required|string'
+            'name'       => 'required|string',
+            'location'       => 'required|string',
+            'phone'       => 'required|string|max:30',
+            'email'       => 'required|string'
         ]);
 
         $meta = [
@@ -50,7 +52,7 @@ class CategoriesController extends Controller
                 'code'  => 200,
                 'message'   => 'OK'
             ],
-            'message'   => 'Category saved successful'
+            'message'   => 'Shop saved successful'
         ];
 
         if($validation->fails()){
@@ -65,15 +67,16 @@ class CategoriesController extends Controller
 
         $data = [
             'name'      => $request['name'],
-            'code'      => $request['code'],
-            'unity'     => $request['unity']
+            'phone'      => $request['phone'],
+            'location'     => $request['location'],
+            'email'     => $request['email'],
         ];
 
-        $category = Category::create($data);
+        $shop = Shop::create($data);
 
         return response()->json([
             'meta' => $meta,
-            'data' => $category
+            'data' => $shop
         ]);
     }
 
@@ -85,22 +88,22 @@ class CategoriesController extends Controller
      */
     public function show($id)
     {
-        $category = Category::where([['deleted_at', null],['id', $id]])->first();
+        $shop = Shop::where([['deleted_at', null],['id', $id]])->first();
 
         $meta = [
             'status' => [
                 'code'  => 200,
                 'message'   => 'OK'
             ],
-            'message'   => "Category's details"
+            'message'   => "Shop's details"
         ];
-        if($category == null){
-            $meta['message'] = "No data corresponded";
+        if($shop == null){
+            $meta['message'] = 'No data corresponded';
         }
 
         return response()->json([
             'meta' => $meta,
-            'data' => $category
+            'data' => $shop
         ]);
     }
 
@@ -129,17 +132,17 @@ class CategoriesController extends Controller
                 'code'  => 200,
                 'message'   => 'OK'
             ],
-            'message'   => 'Category deleted successful'
+            'message'   => 'Shop deleted successful'
         ];
 
-        $category = Category::find($id);
+        $shop = Shop::find($id);
 
-        if($category->deleted_at == null){
-            $category->deleted_at = now();
-            $category->save();
+        if($shop->deleted_at == null){
+            $shop->deleted_at = now();
+            $shop->save();
 
         }else{
-            $meta['message'] = 'Category already deleted';
+            $meta['message'] = 'Shop already deleted';
         }
 
         return response()->json([

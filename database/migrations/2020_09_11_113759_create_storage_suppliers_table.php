@@ -16,12 +16,14 @@ class CreateStorageSuppliersTable extends Migration
         Schema::create('storage_suppliers', function (Blueprint $table) {
             $table->id();
             $table->integer("article_id");
+            $table->integer("color_id");
             $table->integer("supplier_id");
             $table->integer("storage_id");
-            $table->integer("reference_id");
+            $table->integer("liaison_id");
             $table->integer("user_id");
             $table->dateTime("date");
             $table->integer("quantity");
+            $table->integer("price_gave");
             $table->dateTime("deleted_at")->nullable();
             $table->timestamps();
         });

@@ -4,8 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Supplier extends Model
+class Liaison extends Model
 {
-    protected $fillable = ["name", "location", "email", "phone"];
+    protected $fillable = ["name", "number", "storage_id", "shop_id"];
     protected $hidden = ["deleted_at"];
 }

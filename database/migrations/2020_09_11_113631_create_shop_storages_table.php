@@ -18,7 +18,7 @@ class CreateShopStoragesTable extends Migration
             $table->integer("article_id");
             $table->integer("shop_id");
             $table->integer("storage_id");
-            $table->integer("reference_id");
+            $table->integer("liaison_id");
             $table->integer("user_id");
             $table->dateTime("date");
             $table->integer("quantity");

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateReferencesTable extends Migration
+class AddColumnColorIdToShopStorageTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,8 @@ class CreateReferencesTable extends Migration
      */
     public function up()
     {
-        Schema::create('references', function (Blueprint $table) {
-            $table->id();
-            $table->string("name", 20);
-            $table->string("number", 20);
-            $table->dateTime("deleted_at")->nullable();
-            $table->timestamps();
+        Schema::table('shop_storages', function (Blueprint $table) {
+            $table->integer("color_id")->after("article_id");
         });
     }
 
@@ -29,6 +25,8 @@ class CreateReferencesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('references');
+        Schema::table('shop_storages', function (Blueprint $table) {
+            $table->dropColumn("color_id");
+        });
     }
 }

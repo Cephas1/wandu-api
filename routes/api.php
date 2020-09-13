@@ -15,11 +15,14 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::resource('categories', 'API\CategoriesController');
-Route::resource('clients', 'API\ClientsController');
-Route::resource('furnishers', 'API\FurnishersController');
+Route::resource('shops', 'API\ShopsController');
+Route::resource('storages', 'API\StoragesController');
+Route::resource('suppliers', 'API\SuppliersController');
+Route::resource('supplies', 'API\SuppliesController');
 Route::resource('articles', 'API\ArticlesController');
-Route::resource('deliveries', 'API\DeliveriesController');
+Route::resource('natures', 'API\SpendtypesController');
 Route::resource('purchases', 'API\PurchasesController');
+Route::resource('deliverances', 'API\DeliverancesController');
 
 Route::post('/login', 'API\Auth\LoginController@login');
 
