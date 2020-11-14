@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\Article;
+use App\Models\Color;
 use App\Models\Container;
 use App\Models\Liaison;
 use App\Models\Storage_supplier;
+use App\Models\Supplier;
 use Illuminate\Http\Request;
 
 class SuppliesController extends Controller
@@ -17,7 +20,7 @@ class SuppliesController extends Controller
      */
     public function index()
     {
-        $supply_liaisons = Liaison::where("storage_id", 1)->get();
+        $supply_liaisons = Liaison::where([["provides", 1],["storage_id", 1]])->orderBy('created_at', 'desc')->get()->load("supplier","storage_suppliers.article", "storage_suppliers.color");
 
         $meta = [
             'status' => [
@@ -40,7 +43,9 @@ class SuppliesController extends Controller
      */
     public function create()
     {
-        $containers = Container::where("storage_id", 1)->get()->load('article', 'color');
+        $products = Article::orderBy("name", "asc")->get();
+        $colors = Color::orderBy("name", "asc")->get();
+        $suppliers = Supplier::orderBy("name", "asc")->get();
 
         $meta = [
             'status' => [
@@ -52,7 +57,7 @@ class SuppliesController extends Controller
 
         return response()->json([
             'meta' => $meta,
-            'data' => $containers
+            'data' => ['products' => $products, 'colors' => $colors, 'providers' => $suppliers]
         ]);
     }
 
@@ -72,15 +77,18 @@ class SuppliesController extends Controller
             'message'   => 'Failure request'
         ];
 
+        $supplies = $request["supplies"];
+
         // Create the reference of supplies
         $liaison = array(
             "name"          => "SUP" . rand(1, 99) . now()->dayOfYear,
             "number"        => rand(1, 99999999999),
-            "storage_id"    => 1
+            "provides"      =>1,
+            "storage_id"    => 1,
+            "supplier_id"   => $supplies[0]["supplier_id"]
         );
         $liaison = Liaison::create($liaison);
 
-        $supplies = $request["supplies"];
         for($i = 0; $i < count($supplies); $i++)
         {
             // Save provided article one by one
@@ -125,7 +133,7 @@ class SuppliesController extends Controller
 
         return response()->json([
             'meta' => $meta,
-            'data' => $liaison->name
+            'data' => $liaison
         ]);
     }
 

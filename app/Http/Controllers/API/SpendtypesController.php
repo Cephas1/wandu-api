@@ -16,7 +16,7 @@ class SpendtypesController extends Controller
      */
     public function index()
     {
-        $spendtypes = Spendtype::where('deleted_at','=', null)->get();
+        $spendtypes = Spendtype::where('deleted_at','=', null)->orderBy('name')->get();
 
         $meta = [
             'status' => [

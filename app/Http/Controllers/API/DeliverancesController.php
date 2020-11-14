@@ -17,7 +17,7 @@ class DeliverancesController extends Controller
      */
     public function index()
     {
-        $deliverance_liaisons = Liaison::where([["storage_id", "=", null], ["shop_id", "=", null]])->get();
+        $deliverance_liaisons = Liaison::where([["deliverances","=", 1],["storage_id", "=", 1]])->orderBy('created_at', 'desc')->get()->load("shop");
 
         $meta = [
             'status' => [
@@ -34,13 +34,52 @@ class DeliverancesController extends Controller
     }
 
     /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function shopDeliverance($id)
+    {
+        $deliverance_liaisons = Liaison::where([["deliverances", 1],["shop_id", $id]])->orderBy('created_at', 'desc')->get()->load("storage","shop_storage.article","shop_storage.color");
+
+        $meta = [
+            'status' => [
+                'code'  => 200,
+                'message'   => 'OK'
+            ],
+            'message'   => 'List of supply liaisons and details'
+        ];
+
+        return response()->json([
+            'meta' => $meta,
+            'data' => $deliverance_liaisons
+        ]);
+    }
+
+    /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function create()
     {
-        //
+
+        $meta = [
+            'status' => [
+                'code'  => 200,
+                'message'   => 'OK'
+            ],
+            'message'   => 'List of supply liaisons'
+        ];
+
+        $products = Container::where("storage_id", 1)->get();
+        $products = $products->groupby("article_id");
+        $products = $products->toArray();
+
+        return response()->json([
+            'meta' => $meta,
+            'data' => $products
+        ]);
     }
 
     /**
@@ -63,7 +102,10 @@ class DeliverancesController extends Controller
         // Create the reference of deliverance (Storage to Shop)
         $liaison = array(
             "name"          => "DE" . rand(1, 99) . now()->dayOfYear,
-            "number"        => rand(1, 99999999999)
+            "number"        => rand(1, 99999999999),
+            "deliverances"  => 1,
+            "storage_id"    => 1,
+            "shop_id"       => $deliverances[0]["shop_id"]
         );
         $liaison = Liaison::create($liaison);
 
@@ -75,7 +117,7 @@ class DeliverancesController extends Controller
                 'quantity'          => $deliverances[$i]["quantity"],
                 'liaison_id'        => $liaison->id,
                 'storage_id'        => 1,
-                'shop_id'        => 1,
+                'shop_id'        => $deliverances[$i]["shop_id"],
                 'user_id'           => 1,
                 'date'              => now()
             );
@@ -90,6 +132,7 @@ class DeliverancesController extends Controller
                     ["article_id", $deliverance->article_id],
                     ["color_id", $deliverance->color_id]
                 ])->first();
+
                 $storage_container->quantity = $storage_container->quantity - $deliverance->quantity;
                 $storage_container->save();
 
@@ -99,6 +142,7 @@ class DeliverancesController extends Controller
                     ["article_id", $deliverance->article_id],
                     ["color_id", $deliverance->color_id]
                 ])->first();
+
                 if($shop_container){
                     $shop_container->quantity = $shop_container->quantity + $deliverance->quantity;
                     $shop_container->save();
@@ -114,12 +158,12 @@ class DeliverancesController extends Controller
 
                 $meta['message'] = "Deliverance saved successful";
             }
-
-            return response()->json([
-                'meta' => $meta,
-                'data' => $liaison->name
-            ]);
         }
+
+        return response()->json([
+            'meta' => $meta,
+            'data' => $liaison
+        ]);
     }
 
     /**
@@ -130,7 +174,20 @@ class DeliverancesController extends Controller
      */
     public function show($id)
     {
-        //
+        $deliverances = Shop_storage::where("liaison_id", $id)->get();
+
+        $meta = [
+            'status' => [
+                'code'  => 200,
+                'message'   => 'OK'
+            ],
+            'message'   => 'List of deliverances'
+        ];
+
+        return response()->json([
+            'meta' => $meta,
+            'data' => $deliverances
+        ]);
     }
 
     /**

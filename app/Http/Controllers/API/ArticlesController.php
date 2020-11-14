@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Models\Article;
 use Illuminate\Support\Carbon;
@@ -17,7 +18,7 @@ class ArticlesController extends Controller
      */
     public function index()
     {
-        $products = Article::where('deleted_at','=', null)->get();
+        $products = Article::where('deleted_at','=', null)->orderBy('name', 'asc')->get()->load('category');
 
         $meta = [
             'status' => [
@@ -43,7 +44,7 @@ class ArticlesController extends Controller
     {
         $validation = Validator::make($request->all(),[
             'name'       => 'required|string',
-            'description'       => 'required|string|min:10',
+            'description'       => 'nullable|string|min:5',
             'price_1'       => 'required|integer',
             'price_2'       => 'required|integer',
             'price_3'       => 'required|integer',
@@ -113,6 +114,30 @@ class ArticlesController extends Controller
         return response()->json([
             'meta' => $meta,
             'data' => $article
+        ]);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function create()
+    {
+        $categories = Category::all();
+
+        $meta = [
+            'status' => [
+                'code'  => 200,
+                'message'   => 'OK'
+            ],
+            'message'   => "Article's categories"
+        ];
+        if($categories == null){
+            $meta['message'] = 'No data corresponded';
+        }
+
+        return response()->json([
+            'meta' => $meta,
+            'data' => $categories
         ]);
     }
 

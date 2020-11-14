@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Article_shop;
 use App\Models\Container;
 use App\Models\Liaison;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\Purchase;
 use Illuminate\Support\Facades\Validator;
@@ -19,7 +20,9 @@ class PurchasesController extends Controller
      */
     public function index()
     {
-        $purchases = Liaison::where("shop_id", 1)->get();
+        $currentDate = date('y-m-d');
+
+        $purchases = Article_shop::where('dtn', $currentDate)->get();
 
         $meta = [
             'status' => [
@@ -78,6 +81,7 @@ class PurchasesController extends Controller
         $liaison = array(
             "name"      => "PU" . rand(1, 99) . now()->dayOfYear,
             "number"    => rand(1, 99999999999),
+            "purchases" => 1,
             "shop_id"   => 1
         );
         $liaison = Liaison::create($liaison);
@@ -85,48 +89,38 @@ class PurchasesController extends Controller
         $purchases = $request["purchases"];
         for($i = 0; $i < count($purchases); $i++)
         {
-            $purchase = array(
-                "article_id"        => $purchases[$i]["article_id"],
-                "color_id"        => $purchases[$i]["color_id"],
-                "quantity"        => $purchases[$i]["quantity"],
-                "price_got"        => $purchases[$i]["price_got"],
-                "date"        => now(),
-                "shop_id"        => 1,
-                "user_id"        => 1,
-                "liaison_id"        => $liaison->id
-            );
+            // Verify if this article is in the shop container
+            $container = Container::where([
+                ["shop_id", 3],
+                ["article_id", $purchases[$i]["article_id"]],
+                ["color_id", $purchases[$i]["color_id"]]
+            ])->first();
 
-            $purchase = Article_shop::create($purchase);
+            if($container) {
 
-            if($purchase)
-            {
-                // Add the provided article to the container(Stock) of a specific shop
+                $purchase = array(
+                    "article_id"        => $purchases[$i]["article_id"],
+                    "color_id"        => $purchases[$i]["color_id"],
+                    "quantity"        => $purchases[$i]["quantity"],
+                    "price_got"        => $purchases[$i]["price_got"],
+                    "date"        => now(),
+                    "dtn"         => date('y-m-d'),
+                    "time"        => date('H:i:s'),
+                    "shop_id"        => 1,
+                    "user_id"        => 1,
+                    "liaison_id"        => $liaison->id
+                );
+                $purchase = Article_shop::create($purchase);
 
-                $container = Container::where([
-                    ["shop_id", $purchase->shop_id],
-                    ["article_id", $purchase->article_id],
-                    ["color_id", $purchase->color_id]
-                ])->first();
-
-                if($container){
-                    $container->quantity = $container->quantity - $purchase->quantity;
-                    $container->save();
-                }else{
-                    $container = array(
-                        "article_id"        => $purchase->article_id,
-                        "shop_id"        => $purchase->storage_id,
-                        "color_id"          => $purchase->color_id,
-                        "quantity"          => $purchase->quantity
-                    );
-                    Container::create($container);
-                }
-                $meta['message'] = "Purchase saved successful";
-            }
+                // Decrement the quantity of article bought
+                $container->quantity = $container->quantity - $purchase->quantity;
+                $container->save();
+            }else $meta['message'] = "L'article n'est pas dans notre stock";
         }
 
         return response()->json([
             'meta' => $meta,
-            'data' => $liaison->name
+            'data' => $liaison
         ]);
     }
 

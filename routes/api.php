@@ -13,24 +13,25 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
 Route::resource('categories', 'API\CategoriesController');
-Route::resource('shops', 'API\ShopsController');
-Route::resource('storages', 'API\StoragesController');
-Route::resource('suppliers', 'API\SuppliersController');
-Route::resource('supplies', 'API\SuppliesController');
-Route::resource('articles', 'API\ArticlesController');
-Route::resource('natures', 'API\SpendtypesController');
-Route::resource('purchases', 'API\PurchasesController');
-Route::resource('deliverances', 'API\DeliverancesController');
 
 Route::post('/login', 'API\Auth\LoginController@login');
 
 Route::middleware('auth:api')->group(function (){
-//    Route::resource('categories', 'API\CategoriesController');
-//    Route::resource('clients', 'API\ClientsController');
-//    Route::resource('furnishers', 'API\FurnishersController');
-//    Route::resource('articles', 'API\ArticlesController');
-//    Route::resource('deliveries', 'API\DeliveriesController');
-//    Route::resource('purchases', 'API\PurchasesController');
+    
+    //Route::resource('categories', 'API\CategoriesController');
+    Route::resource('shops', 'API\ShopsController');
+    Route::resource('storages', 'API\StoragesController');
+    Route::resource('suppliers', 'API\SuppliersController');
+    Route::resource('supplies', 'API\SuppliesController');
+    Route::resource('articles', 'API\ArticlesController');
+    Route::resource('natures', 'API\SpendtypesController');
+    Route::resource('purchases', 'API\PurchasesController');
+    Route::resource('spends', 'API\SpendsController');
+    Route::resource('spendtypes', 'API\SpendtypesController');
+    Route::resource('deliverances', 'API\DeliverancesController');
+    Route::get('/deliverances/shop/{id}', 'API\DeliverancesController@shopDeliverance');
+    Route::get('/containers/storage/{id}', 'API\ContainersController@showStorageContainer');
+    Route::get('/containers/shop/{id}', 'API\ContainersController@showShopContainer');
+    Route::get('/rapports', 'API\RapportController@index');
 });

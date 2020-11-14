@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Article_shop extends Model
 {
-    protected $fillable = ["article_id","date","quantity","price_got","shop_id","user_id","liaison_id", "color_id"];
+    protected $fillable = ["article_id","date","quantity","price_got","shop_id","user_id","liaison_id", "color_id", "dtn", "time"];
     protected $hidden = ["deleted_at"];
 
     public function article(){

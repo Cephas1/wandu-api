@@ -16,7 +16,7 @@ class CreateArticleShopsTable extends Migration
         Schema::create('article_shops', function (Blueprint $table) {
             $table->id();
             $table->integer("article_id");
-            $table->integer("color_id");
+            $table->integer("color_id")->default("1");
             $table->integer("shop_id");
             $table->integer("liaison_id");
             $table->integer("user_id");

@@ -19,38 +19,17 @@ class LoginController extends Controller
     public function login(Request $request){
 
         $http = new Client();
-        $response = $http->post('http://localhost:8000/oauth/token', [
+        $response = $http->post('http://myapi.test/oauth/token', [
             'form_params' => [
                 'grant_type'    => 'password',
-                'client_id'     => 2,
-                'client_secret' => 'ThYfkPYVjblrcWX6eniPMrjXYgvytaujjrgNyvEf',
+                'client_id'     => '2',
+                'client_secret' => 'kzjri0UEWPIEBaPRMzAqwQiXINoBfR9y755B8Oco',
                 'username'      => $request['username'],
                 'password'      => $request['password']
             ]
-        ]); dd($response);
+        ]);
 
-//        try {
-//            $response = $http->post('http://localhost:8000/oauth/token', [
-//                'form_params' => [
-//                    'grant_type'    => 'password',
-//                    'client_id'     => 2,
-//                    'client_secret' => 'ThYfkPYVjblrcWX6eniPMrjXYgvytaujjrgNyvEf',
-//                    'username'      => $request['username'],
-//                    'password'      => $request['password']
-//                ]
-//            ]); //dd($response);
-//
-//            return response()->json($response->getBody());
-//
-//        }catch (BadResponseException $e){
-//            if($e->getCode() == 404){
-//                return response()->json('Invalid request. Please enter a username or a password.', $e->getCode());
-//            }elseif($e->getCode() == 401){
-//                return response()->json('Your credentials are incorrect. Please try again.', $e->getCode());
-//            }
-//
-//            return response()->json('Something went wrong on the server', $e->getCode());
-//        }
+        return json_decode((string) $response->getBody(), true);
 
     }
 }

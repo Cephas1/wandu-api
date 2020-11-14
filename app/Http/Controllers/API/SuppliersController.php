@@ -16,7 +16,7 @@ class SuppliersController extends Controller
      */
     public function index()
     {
-        $suppliers = Supplier::where('deleted_at','=', null)->get();
+        $suppliers = Supplier::where('deleted_at','=', null)->orderBy('name', 'asc')->get();
 
         $meta = [
             'status' => [

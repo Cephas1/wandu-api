@@ -45,7 +45,7 @@ class FurnishersController extends Controller
             'name'       => 'required|string',
             'phone'       => 'required|string|max:30',
             'address'       => 'required|string',
-            'email'       => 'required|string',
+            'email'       => 'nullable|string',
             'image_uri'       => 'nullable|image'
         ]);
 
