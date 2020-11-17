@@ -13,13 +13,14 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-Route::resource('categories', 'API\CategoriesController');
 
-Route::post('/login', 'API\Auth\LoginController@login');
+Route::post('/login', 'API\Auth\LoginController@getToken');
 
 Route::middleware('auth:api')->group(function (){
-    
-    //Route::resource('categories', 'API\CategoriesController');
+
+    Route::post('/register', 'API\Auth\RegisterController@create');
+
+    Route::resource('categories', 'API\CategoriesController');
     Route::resource('shops', 'API\ShopsController');
     Route::resource('storages', 'API\StoragesController');
     Route::resource('suppliers', 'API\SuppliersController');
