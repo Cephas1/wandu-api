@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\User;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use \GuzzleHttp\Client;
 use \GuzzleHttp\Exception\BadResponseException;
@@ -52,7 +53,7 @@ class LoginController extends Controller
 
         $user = User::where('name', $username)->get()->first();
 
-        if($user){
+        if($user && $user->actif == 1){
             if(!Hash::check($password, $user->password)){                
 
                 $meta['message'] = "Bad credentials";
@@ -61,6 +62,9 @@ class LoginController extends Controller
                 ]);
 
             }else{
+
+                $user->api_token = Str::random(60);
+                $user->save();
 
                 return response()->json([
                     'meta' => $meta,

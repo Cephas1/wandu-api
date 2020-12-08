@@ -18,8 +18,6 @@ Route::post('/login', 'API\Auth\LoginController@getToken');
 
 Route::middleware('auth:api')->group(function (){
 
-    Route::post('/register', 'API\Auth\RegisterController@create');
-
     Route::resource('categories', 'API\CategoriesController');
     Route::resource('shops', 'API\ShopsController');
     Route::resource('storages', 'API\StoragesController');
@@ -35,4 +33,11 @@ Route::middleware('auth:api')->group(function (){
     Route::get('/containers/storage/{id}', 'API\ContainersController@showStorageContainer');
     Route::get('/containers/shop/{id}', 'API\ContainersController@showShopContainer');
     Route::get('/rapports', 'API\RapportController@index');
+
+    // Admin's Routes
+
+    Route::post('/register', 'API\Auth\RegisterController@create');
+    Route::get('/users', 'API\UsersController@index')->name('users');
+    Route::put('/users/actif/{id}', 'API\UsersController@desactiveOrActiveUser')->name('users.actif');
+    Route::put('/users/password/{id}', 'API\UsersController@changePassword')->name('users.password');
 });
