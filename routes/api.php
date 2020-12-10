@@ -40,4 +40,5 @@ Route::middleware('auth:api')->group(function (){
     Route::get('/users', 'API\UsersController@index')->name('users');
     Route::put('/users/actif/{id}', 'API\UsersController@desactiveOrActiveUser')->name('users.actif');
     Route::put('/users/password/{id}', 'API\UsersController@changePassword')->name('users.password');
+    Route::post('/getcontainer', 'API\ContainersController@getContainer');
 });

@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-class CategoriesSeeder extends Seeder
+class ColorSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -11,12 +11,12 @@ class CategoriesSeeder extends Seeder
      */
     public function run()
     {
-
         $faker = Faker\Factory::create();
 
-        for ($i = 1 ;$i <= 30; $i++){            
-            DB::table('categories')->insert([
-                'name'   => $faker->name
+        for($i = 1; $i <= 20; $i++){
+            DB::table('colors')->insert([
+                'name' => $faker->colorName,
+                'hexa'  => $faker->hexcolor
             ]);
         }
     }

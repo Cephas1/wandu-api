@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\Supplier;
+use App\Models\Storage_supplier;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -88,22 +89,30 @@ class SuppliersController extends Controller
      */
     public function show($id)
     {
-        $storage = Supplier::where([['deleted_at', null],['id', $id]])->first();
+        $supplier = Supplier::where([['deleted_at', null],['id', $id]])->first();
+        $supplies = null;
 
         $meta = [
             'status' => [
                 'code'  => 200,
                 'message'   => 'OK'
             ],
-            'message'   => "Supplier's details"
+            'message'   => 'No data corresponded'
         ];
-        if($storage == null){
-            $meta['message'] = 'No data corresponded';
+        if($supplier != null){
+            $meta['message'] = "Supplier's details";
+
+            $supplies = Storage_supplier::where('supplier_id', $id)->get();
+            $supplies = $supplies->groupBy('liaison_id');
+            $supplies = $supplies->toArray();
         }
 
         return response()->json([
             'meta' => $meta,
-            'data' => $storage
+            'data' => [
+                'supplier' => $supplier,
+                'supplies' => $supplies
+                ]
         ]);
     }
 

@@ -13,9 +13,25 @@ class ContainersController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function getContainer(Request $request)
     {
-        //
+        $shop_id = $request['shop_id']??null;
+        $storage_id = $request['storage_id']??null;
+
+        $container = Container::where([['shop_id', $shop_id], ['storage_id', $storage_id]])->orderBy('updated_at', 'desc')->get()->load('article.category', 'color');
+
+        $meta = [
+            'status' => [
+                'code'  => 200,
+                'message'   => 'OK'
+            ],
+            'message'   => 'Stock of articles'
+        ];
+
+        return response()->json([
+            'meta' => $meta,
+            'data' => $container
+        ]);
     }
 
     /**
