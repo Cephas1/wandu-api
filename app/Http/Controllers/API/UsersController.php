@@ -100,6 +100,48 @@ class UsersController extends Controller
     }
 
     /**
+     * Store the picture
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Response
+     */
+
+     public function storePicture(Request $request, $id ) {
+         
+        $meta = [
+            'status' => [
+                'code'  => 200,
+                'message'   => 'OK'
+            ],
+            'message'   => "Error file"
+        ];
+
+        $user = User::find($id);
+
+        $file = $request->file('image');
+
+        if($file != null){
+
+            $image = $user->id.'.'.$file->getClientOriginalExtension();
+
+            if (!file_exists(public_path('images\users'))) {
+                mkdir(public_path('images\users'));
+            }
+
+            $file->move(public_path('images\users'), $image);
+            $user->image = "images\users\\".$image;
+            $saved = $user->save();
+
+            if($saved){
+                $meta['message'] = "File saved";
+            }
+        }
+            
+        return response()->json([
+            'meta' => $meta,
+        ]);
+     }
+
+    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request

@@ -40,6 +40,9 @@ Route::middleware('auth:api')->group(function (){
     Route::get('/users', 'API\UsersController@index')->name('users');
     Route::put('/users/actif/{id}', 'API\UsersController@desactiveOrActiveUser')->name('users.actif');
     Route::put('/users/password/{id}', 'API\UsersController@changePassword')->name('users.password');
+    Route::post('/users/storepicture/{id}', 'API\UsersController@storePicture')->name('users.storePicture');
     Route::post('/getcontainer', 'API\ContainersController@getContainer');
     Route::post('/inventaire', 'API\ComptaController@inventaire');
+
+    Route::post('/getpicture', 'API\PictureController@getPicture');
 });
