@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Container;
 use App\Models\Liaison;
 use App\Models\Shop_storage;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 
 class DeliverancesController extends Controller
@@ -97,15 +98,17 @@ class DeliverancesController extends Controller
             ],
             'message'   => 'failure request'
         ];
+        
         $deliverances = $request["deliverances"];
+        $meta_data = $request["meta_data"];
 
         // Create the reference of deliverance (Storage to Shop)
         $liaison = array(
             "name"          => "DE" . rand(1, 99) . now()->dayOfYear,
             "number"        => rand(1, 99999999999),
             "deliverances"  => 1,
-            "storage_id"    => 1,
-            "shop_id"       => $deliverances[0]["shop_id"]
+            "storage_id"    => $meta_data["storage_id"],
+            "shop_id"       => $meta_data["shop_id"]
         );
         $liaison = Liaison::create($liaison);
 
@@ -116,54 +119,40 @@ class DeliverancesController extends Controller
                 'color_id'          => $deliverances[$i]["color_id"],
                 'quantity'          => $deliverances[$i]["quantity"],
                 'liaison_id'        => $liaison->id,
-                'storage_id'        => 1,
-                'shop_id'        => $deliverances[$i]["shop_id"],
-                'user_id'           => 1,
+                'storage_id'        => $meta_data["storage_id"],
+                'shop_id'           => $meta_data["shop_id"],
+                'user_id'           => $meta_data["user_id"],
                 'date'              => now()
             );
 
             $deliverance = Shop_storage::create($deliverance);
 
-            if($deliverance)
-            {
-                // decrement of a specific container of storage
-                $storage_container = Container::where([
-                    ["storage_id", $deliverance->storage_id],
-                    ["article_id", $deliverance->article_id],
-                    ["color_id", $deliverance->color_id]
-                ])->first();
+            // decrement of a specific container of storage
+            $storage_container = Container::where([
+                ["storage_id", $deliverance->storage_id],
+                ["article_id", $deliverance->article_id],
+                ["color_id", $deliverance->color_id]
+            ])->first();
 
-                $storage_container->quantity = $storage_container->quantity - $deliverance->quantity;
-                $storage_container->save();
-
-                // increment of a specific container of shop
-                $shop_container = Container::where([
-                    ["shop_id", $deliverance->shop_id],
-                    ["article_id", $deliverance->article_id],
-                    ["color_id", $deliverance->color_id]
-                ])->first();
-
-                if($shop_container){
-                    $shop_container->quantity = $shop_container->quantity + $deliverance->quantity;
-                    $shop_container->save();
-                }else{
-                    $container = array(
-                        "article_id"        => $deliverance->article_id,
-                        "shop_id"        => $deliverance->shop_id,
-                        "color_id"          => $deliverance->color_id,
-                        "quantity"          => $deliverance->quantity
-                    );
-                    Container::create($container);
-                }
-
-                $meta['message'] = "Deliverance saved successful";
-            }
+            $storage_container->quantity = $storage_container->quantity - $deliverance->quantity;
+            $storage_container->save();
         }
 
-        return response()->json([
-            'meta' => $meta,
-            'data' => $liaison
-        ]);
+        $notification_data = array(
+            'type_notification_id'      => 1,
+            'liaison_id'                => $liaison->id,
+        );
+        $notification = Notification::create($notification_data);
+
+        if($notification){
+
+            $meta['message'] = "Deliverance saved successful";
+
+            return response()->json([
+                'meta' => $meta,
+                'data' => $liaison
+            ]);
+        }
     }
 
     /**

@@ -131,6 +131,11 @@ class SuppliesController extends Controller
             }
         }
 
+        // TODO
+        /**
+         * livraison doit avoir les champs PU et PT,
+         * pour faciliter les calculs price_gave ne fait pas l'affaire
+         */
         return response()->json([
             'meta' => $meta,
             'data' => $liaison
