@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\Shop;
+use App\Models\Article_shop;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -29,6 +30,38 @@ class ShopsController extends Controller
         return response()->json([
             'meta' => $meta,
             'data' => $shops
+        ]);
+    }
+
+    public function dashboard($shop_id){
+
+        $meta = [
+            'status' => [
+                'code'  => 200,
+                'message'   => 'OK'
+            ],
+            'message'   => 'Shop dashboard'
+        ];
+
+        $shop = Shop::select(['name', 'location'])->firstWhere('id',$shop_id);
+
+        $container = Container::where('shop_id', $shop_id);
+
+        $purchases = Article_shop::where('shop_id', $shop_id)->get();
+        $purchases = $purchases->groupBy('dtn');
+
+        $days_sold = [];
+        foreach($purchases as $key => $values){
+            $sum = 0;
+            foreach($values as $value){
+                $sum = $sum + ($value->price_got * $value->quantity);
+            }
+            $days_sold[$key] = $sum;
+        }
+
+        return response()->json([
+            'meta' => $meta,
+            'data' => ['shop' => $shop,'recettes' => $days_sold]
         ]);
     }
 

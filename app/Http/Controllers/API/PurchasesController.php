@@ -43,9 +43,9 @@ class PurchasesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function getcontainer($id)
     {
-        $containers = Container::where("shop_id", 1)->get()->load('article', 'color');
+        $containers = Container::where([['shop_id', $id],['quantity', '>', 0]])->get()->load('article', 'color');
 
         $meta = [
             'status' => [

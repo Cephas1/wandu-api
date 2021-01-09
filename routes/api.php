@@ -20,12 +20,12 @@ Route::middleware('auth:api')->group(function (){
 
     Route::resource('categories', 'API\CategoriesController');
     Route::resource('shops', 'API\ShopsController');
+    Route::get('/shops/dashboard/{id}', 'API\ShopsController@dashboard');
     Route::resource('storages', 'API\StoragesController');
     Route::resource('suppliers', 'API\SuppliersController');
     Route::resource('supplies', 'API\SuppliesController');
     Route::resource('articles', 'API\ArticlesController');
     Route::resource('natures', 'API\SpendtypesController');
-    Route::resource('purchases', 'API\PurchasesController');
     Route::resource('spends', 'API\SpendsController');
     Route::resource('spendtypes', 'API\SpendtypesController');
     Route::resource('deliverances', 'API\DeliverancesController');
@@ -37,7 +37,7 @@ Route::middleware('auth:api')->group(function (){
     Route::post('/getcontainer', 'API\ContainersController@getContainer');
 
     // Rapport de la journee
-    Route::get('/rapports', 'API\RapportController@index');
+    Route::get('/rapports/{id}/{date?}', 'API\RapportController@rapport');
 
     // User's route
     Route::post('/register', 'API\Auth\RegisterController@create');
@@ -54,4 +54,8 @@ Route::middleware('auth:api')->group(function (){
     Route::get('/notifications/{id}', 'API\NotificationController@getDetails');
     Route::post('/notifications/getnotifications', 'API\NotificationController@getNotifications');
     Route::post('/notifications/confirm', 'API\NotificationController@confirmed');
+
+    // Purchases's routes    
+    Route::resource('purchases', 'API\PurchasesController');
+    Route::get('/purchases/getcontainer/{id}', 'API\PurchasesController@getcontainer');
 });

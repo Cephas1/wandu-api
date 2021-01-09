@@ -30,7 +30,7 @@ class NotificationController extends Controller
 
             $notifications = DB::table('notifications')->join('liaisons', function ($join) {
                 $join->on('liaisons.id', '=', 'notifications.liaison_id')
-                ->where('liaisons.shop_id', 1)
+                ->where('liaisons.shop_id', $shop_id)
                 ->orderByRaw('notifications.viewed_at DESC')
                 ->orderBy('notifications.created_at', 'desc');
             })->get();
@@ -78,35 +78,51 @@ class NotificationController extends Controller
     }
 
     public function confirmed(Request $request){
+        
+        $meta = [
+            'status' => [
+                'code'  => 200,
+                'message'   => 'OK'
+            ],
+            'message'   => 'Deliverance confirmed'
+        ];
 
         $deliverances_id = $request['deliverances_id'];
 
         foreach($deliverances_id as $id){
 
             $deliverance = Shop_storage::find($id);
-            $deliverance->viewed_at = now();
-            $deliverance->save();
             
 
-            // increment of a specific container of shop
-            $shop_container = Container::where([
-                ["shop_id", $deliverance->shop_id],
-                ["article_id", $deliverance->article_id],
-                ["color_id", $deliverance->color_id]
-            ])->first();
+            if($deliverance->confirmed == 0){
+                
+                // increment of a specific container of shop
+                $shop_container = Container::where([
+                    ["shop_id", $deliverance->shop_id],
+                    ["article_id", $deliverance->article_id],
+                    ["color_id", $deliverance->color_id]
+                ])->first();
 
-            if($shop_container){
-                $shop_container->quantity = $shop_container->quantity + $deliverance->quantity;
-                $shop_container->save();
-            }else{
-                $container = array(
-                    "article_id"        => $deliverance->article_id,
-                    "shop_id"        => $deliverance->shop_id,
-                    "color_id"          => $deliverance->color_id,
-                    "quantity"          => $deliverance->quantity
-                );
-                Container::create($container);
+                if($shop_container){
+                    $shop_container->quantity = $shop_container->quantity + $deliverance->quantity;
+                    $shop_container->save();
+                }else{
+                    $container = array(
+                        "article_id"        => $deliverance->article_id,
+                        "shop_id"        => $deliverance->shop_id,
+                        "color_id"          => $deliverance->color_id,
+                        "quantity"          => $deliverance->quantity
+                    );
+                    Container::create($container);
+                }
+                
+                $deliverance->confirmed = 1;
+                $deliverance->save();
             }
         }
+
+        return response()->json([
+            'meta' => $meta
+        ]);
     }
 }
