@@ -98,7 +98,7 @@ class SuppliesController extends Controller
                 "supplier_id"        => $supplies[$i]["supplier_id"],
                 "quantity"        => $supplies[$i]["quantity"],
                 "price_gave"        => $supplies[$i]["price_gave"],
-                "date"        => now(),
+                "date"        => date('Y-m-d'),
                 "storage_id"        => $supplies[$i]["supplier_id"],
                 "user_id"        => 1,
                 "liaison_id"        => $liaison->id

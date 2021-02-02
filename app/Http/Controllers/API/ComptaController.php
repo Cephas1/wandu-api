@@ -10,7 +10,7 @@ use App\Models\Shop_storage;
 
 class ComptaController extends Controller
 {
-    public function inventaire(Request $request){
+    public function shop_inventaire(Request $request){
 
         $meta = [
             'status' => [
@@ -95,5 +95,78 @@ class ComptaController extends Controller
             'meta' => $meta,
             'data' => ['entrees' => $livraisons, 'sorties' => $ventes]
         ]);
+    }
+
+    public function storage_inventaire(Request $request){
+
+        $meta = [
+            'status' => [
+                'code'  => 200,
+                'message'   => 'OK'
+            ],
+            'message'   => 'List of supplies'
+        ];
+
+        $date_debut = $request['date_debut'];
+        $date_fin = $request['date_fin'];
+        $storage_id = $request['storage_id'];
+        $livraisons = [];
+        $ventes = [];
+
+        // Traitement des entrees
+        $entrees = Storage_supplier::where('storage_id', $storage_id)->whereBetween('date', [$date_debut, $date_fin])->get()->load('article', 'color');
+        $entrees = $entrees->groupBy(['article.id', 'color.id']);        
+        
+        foreach($entrees as $product_name => $values){
+
+            $livraison = [];
+
+            foreach($values as $color_name => $val){
+                $details = [];
+                $quantity = 0;
+
+                foreach($val as $v){
+                    $details['prix_achat'] = "A revoir";
+                    $quantity = $quantity + $v->quantity;
+                }
+                $details['quantity'] = $quantity;
+
+
+                $livraison[] = [$color_name => $details];
+            }
+
+            $livraisons[] = [$product_name => $livraison];
+        }
+
+        // Traitement des sorties
+        $sorties = Shop_storage::where('storage_id', $storage_id)->whereBetween('date', [$date_debut, $date_fin])->get()->load('article', 'color');
+        $sorties = $sorties->groupBy(['article.name', 'color.name']);        
+
+        foreach($sorties as $product_name => $values){
+
+            $vente = [];
+
+            foreach($values as $color_name => $val){
+
+                $details = [];
+                $quantity = 0;
+
+                foreach($val as $v){
+                    $quantity = $quantity + $v->quantity;
+                }
+                $details['quantity'] = $quantity;
+
+
+                $vente[] = [$color_name => $details];
+            }
+
+            $ventes[] = [$product_name => $vente];
+        }
+
+        return response()->json([
+            'meta' => $meta,
+            'data' => ['entrees' => $livraisons, 'sorties' => $ventes]
+        ]);
+
     }
 }

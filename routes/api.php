@@ -46,7 +46,8 @@ Route::middleware('auth:api')->group(function (){
     Route::put('/users/password/{id}', 'API\UsersController@changePassword')->name('users.password');
     Route::post('/users/storepicture/{id}', 'API\UsersController@storePicture')->name('users.storePicture');
     
-    Route::post('/inventaire', 'API\ComptaController@inventaire');
+    Route::post('/shop_inventaire', 'API\ComptaController@shop_inventaire');
+    Route::post('/storage_inventaire', 'API\ComptaController@storage_inventaire');
 
     Route::post('/getpicture', 'API\PictureController@getPicture');
 

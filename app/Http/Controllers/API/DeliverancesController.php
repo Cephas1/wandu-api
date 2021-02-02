@@ -122,7 +122,7 @@ class DeliverancesController extends Controller
                 'storage_id'        => $meta_data["storage_id"],
                 'shop_id'           => $meta_data["shop_id"],
                 'user_id'           => $meta_data["user_id"],
-                'date'              => now()
+                'date'              => date('Y-m-d')
             );
 
             $deliverance = Shop_storage::create($deliverance);

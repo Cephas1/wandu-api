@@ -20,7 +20,8 @@ class CreateShopStoragesTable extends Migration
             $table->integer("storage_id");
             $table->integer("liaison_id");
             $table->integer("user_id");
-            $table->dateTime("date");
+            $table->date("date");
+            $table->time("time");
             $table->integer("quantity");
             $table->dateTime("deleted_at")->nullable();
             $table->timestamps();
