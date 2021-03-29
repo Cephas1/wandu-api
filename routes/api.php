@@ -15,48 +15,53 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::post('/login', 'API\Auth\LoginController@getToken');
+Route::post('/register', 'API\Auth\RegisterController@create');
 
-Route::middleware('auth:api')->group(function (){
+Route::middleware('auth:api')->namespace('API')->group(function (){
 
-    Route::resource('categories', 'API\CategoriesController');
-    Route::resource('shops', 'API\ShopsController');
-    Route::get('/shops/dashboard/{id}', 'API\ShopsController@dashboard');
-    Route::resource('storages', 'API\StoragesController');
-    Route::resource('suppliers', 'API\SuppliersController');
-    Route::resource('supplies', 'API\SuppliesController');
-    Route::resource('articles', 'API\ArticlesController');
-    Route::resource('natures', 'API\SpendtypesController');
-    Route::resource('spends', 'API\SpendsController');
-    Route::resource('spendtypes', 'API\SpendtypesController');
-    Route::resource('deliverances', 'API\DeliverancesController');
-    Route::get('/deliverances/shop/{id}', 'API\DeliverancesController@shopDeliverance');
+    Route::resource('categories', 'CategoriesController');
+    Route::resource('shops', 'ShopsController');
+    Route::get('/shops/dashboard/{id}', 'ShopsController@dashboard');
+    Route::get('/storages/dashboard/{id}', 'StoragesController@dashboard');
+    Route::resource('storages', 'StoragesController');
+    Route::resource('suppliers', 'SuppliersController');
+    Route::resource('supplies', 'SuppliesController');
+    Route::resource('articles', 'ArticlesController');
+    Route::resource('natures', 'SpendtypesController');
+    Route::resource('spends', 'SpendsController');
+    Route::resource('spendtypes', 'SpendtypesController');
+    Route::resource('deliverances', 'DeliverancesController');
+    Route::get('/deliverances/shop/{id}', 'DeliverancesController@shopDeliverance');
+
+    Route::get('/dashboard/{date_debut}/{date_fin}', 'DashboardController@admin');
+    Route::get('/dashboard/{shop_id}/{date_debut}/{date_fin}', 'DashboardController@shop');
 
     // Containers
-    Route::get('/containers/storage/{id}', 'API\ContainersController@showStorageContainer');
-    Route::get('/containers/shop/{id}', 'API\ContainersController@showShopContainer');
-    Route::post('/getcontainer', 'API\ContainersController@getContainer');
+    Route::get('/containers/storage/{id}', 'ContainersController@showStorageContainer');
+    Route::get('/containers/shop/{id}', 'ContainersController@showShopContainer');
+    Route::post('/getcontainer', 'ContainersController@getContainer');
 
     // Rapport de la journee
-    Route::get('/rapports/{id}/{date?}', 'API\RapportController@rapport');
+    Route::get('/rapports/{id}/{date?}', 'RapportController@rapport');
 
     // User's route
-    Route::post('/register', 'API\Auth\RegisterController@create');
-    Route::get('/users', 'API\UsersController@index')->name('users');
-    Route::put('/users/actif/{id}', 'API\UsersController@desactiveOrActiveUser')->name('users.actif');
-    Route::put('/users/password/{id}', 'API\UsersController@changePassword')->name('users.password');
-    Route::post('/users/storepicture/{id}', 'API\UsersController@storePicture')->name('users.storePicture');
+    Route::get('/users', 'UsersController@index')->name('users');
+    Route::get('/users/{id}', 'UsersController@show');
+    Route::put('/users/actif/{id}', 'UsersController@desactiveOrActiveUser')->name('users.actif');
+    Route::put('/users/password/{id}', 'UsersController@changePassword')->name('users.password');
+    Route::post('/users/storepicture/{id}', 'UsersController@storePicture')->name('users.storePicture');
     
-    Route::post('/shop_inventaire', 'API\ComptaController@shop_inventaire');
-    Route::post('/storage_inventaire', 'API\ComptaController@storage_inventaire');
+    Route::post('/shop_inventaire', 'ComptaController@shop_inventaire');
+    Route::post('/storage_inventaire', 'ComptaController@storage_inventaire');
 
-    Route::post('/getpicture', 'API\PictureController@getPicture');
+    Route::get('/getpicture/{url}', 'PictureController@getPicture');
 
     // Notification's route
-    Route::get('/notifications/{id}', 'API\NotificationController@getDetails');
-    Route::post('/notifications/getnotifications', 'API\NotificationController@getNotifications');
-    Route::post('/notifications/confirm', 'API\NotificationController@confirmed');
+    Route::get('/notifications/{id}', 'NotificationController@getDetails');
+    Route::post('/notifications/getnotifications', 'NotificationController@getNotifications');
+    Route::post('/notifications/confirm', 'NotificationController@confirmed');
 
     // Purchases's routes    
-    Route::resource('purchases', 'API\PurchasesController');
-    Route::get('/purchases/getcontainer/{id}', 'API\PurchasesController@getcontainer');
+    Route::resource('purchases', 'PurchasesController');
+    Route::get('/purchases/getcontainer/{id}', 'PurchasesController@getcontainer');
 });

@@ -30,7 +30,7 @@ class NotificationController extends Controller
 
             $notifications = DB::table('notifications')->join('liaisons', function ($join) {
                 $join->on('liaisons.id', '=', 'notifications.liaison_id')
-                ->where('liaisons.shop_id', $shop_id)
+                ->where('liaisons.shop_id', 1)
                 ->orderByRaw('notifications.viewed_at DESC')
                 ->orderBy('notifications.created_at', 'desc');
             })->get();

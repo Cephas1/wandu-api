@@ -98,9 +98,10 @@ class SuppliesController extends Controller
                 "supplier_id"        => $supplies[$i]["supplier_id"],
                 "quantity"        => $supplies[$i]["quantity"],
                 "price_gave"        => $supplies[$i]["price_gave"],
-                "date"        => date('Y-m-d'),
-                "storage_id"        => $supplies[$i]["supplier_id"],
+                "storage_id"        => 1,
                 "user_id"        => 1,
+                "date"        => date('Y-m-d'),
+                "time"        => date('H:i:s'),
                 "liaison_id"        => $liaison->id
             );
             $supply = Storage_supplier::create($supply);

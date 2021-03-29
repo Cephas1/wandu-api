@@ -51,7 +51,7 @@ class LoginController extends Controller
         $username = $request['username'];
         $password = $request['password'];
 
-        $user = User::where('name', $username)->get()->first();
+        $user = User::where('name', $username)->get()->first()->load('rule');
 
         if($user && $user->actif == 1){
             if(!Hash::check($password, $user->password)){                

@@ -11,7 +11,7 @@ class ColorSeeder extends Seeder
      */
     public function run()
     {
-        $faker = Faker\Factory::create();
+        $faker = Faker\Factory::create('fr_FR');
 
         for($i = 1; $i <= 20; $i++){
             DB::table('colors')->insert([

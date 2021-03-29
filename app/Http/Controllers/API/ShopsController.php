@@ -4,7 +4,9 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\Shop;
+use App\Models\Spend;
 use App\Models\Article_shop;
+use App\Models\Shop_storage;
 use App\Models\Container;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -60,9 +62,33 @@ class ShopsController extends Controller
             $days_sold[$key] = $sum;
         }
 
+        $spends = Spend::where('shop_id', $shop_id)->get();
+        $spends = $spends->groupBy('date');
+
+        $days_spends = [];
+        foreach($spends as $key => $values){
+            $sum = 0;
+            foreach($values as $value){
+                $sum = $sum + $value->price;
+            }
+            $days_spends[$key] = $sum;
+        }
+
+        $supplies = Shop_storage::where('shop_id', $shop_id)->get();
+        $supplies = $supplies->groupBy('date');
+
+        $days_supplies = [];
+        foreach($supplies as $key => $values){
+            $sum = 0;
+            foreach($values as $value){
+                $sum = $sum + $value->price;
+            }
+            $days_supplies[$key] = $sum;
+        }
+
         return response()->json([
             'meta' => $meta,
-            'data' => ['shop' => $shop,'recettes' => $days_sold]
+            'data' => ['shop' => $shop,'recettes' => $days_sold,'depenses'=> $days_spends, 'livraisons'=> $days_supplies]
         ]);
     }
 

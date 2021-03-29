@@ -11,13 +11,44 @@ class CategoriesSeeder extends Seeder
      */
     public function run()
     {
-
-        $faker = Faker\Factory::create();
-
-        for ($i = 1 ;$i <= 30; $i++){            
-            DB::table('categories')->insert([
-                'name'   => $faker->name
-            ]);
-        }
+        DB::table('categories')->insert([
+            'name'   => 'Seau'
+        ]);
+        
+        DB::table('categories')->insert([
+            'name'   => 'Gobelet'
+        ]);
+        
+        DB::table('categories')->insert([
+            'name'   => 'Chaise'
+        ]);
+        
+        DB::table('categories')->insert([
+            'name'   => 'Pot'
+        ]);
+        
+        DB::table('categories')->insert([
+            'name'   => 'Verre'
+        ]);
+        
+        DB::table('categories')->insert([
+            'name'   => 'Assiette'
+        ]);
+        
+        DB::table('categories')->insert([
+            'name'   => 'Culliere'
+        ]);
+        
+        DB::table('categories')->insert([
+            'name'   => 'Fourchette'
+        ]);
+        
+        DB::table('categories')->insert([
+            'name'   => 'Table'
+        ]);
+        
+        DB::table('categories')->insert([
+            'name'   => 'Vase'
+        ]);
     }
 }

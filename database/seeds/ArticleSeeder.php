@@ -23,7 +23,7 @@ class ArticleSeeder extends Seeder
                 'price_2'   => $price + 300,
                 'price_3'   => $price + 500,
                 'price_4'   => $price + 1000,
-                'category_id'   => rand(1, 30)
+                'category_id'   => rand(1, 10)
             ]);
         }
     }

@@ -66,11 +66,11 @@ class SpendtypesController extends Controller
             'name'      => $request['name']
         ];
 
-        $storage = Spendtype::create($data);
+        $spendtype = Spendtype::create($data);
 
         return response()->json([
             'meta' => $meta,
-            'data' => $storage
+            'data' => $spendtype
         ]);
     }
 

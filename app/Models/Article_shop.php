@@ -16,4 +16,12 @@ class Article_shop extends Model
     public function color(){
         return $this->belongsTo('App\Models\Color');
     }
+
+    public function liaison(){
+        return $this->belongsTo('App\Models\Liaison');
+    }
+
+    public function user(){
+        return $this->belongsTo('App\User');
+    }
 }

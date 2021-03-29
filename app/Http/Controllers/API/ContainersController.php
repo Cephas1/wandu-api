@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\Container;
+use App\Models\Storage_supplier;
 use Illuminate\Http\Request;
 
 class ContainersController extends Controller
@@ -43,6 +44,7 @@ class ContainersController extends Controller
     public function showStorageContainer($id)
     {
         $container = Container::where('storage_id', $id)->orderBy('updated_at', 'desc')->get()->load('article.category', 'color');
+        $storage_suppliers = Storage_supplier::select('article_id','color_id','storage_id','date', 'time', 'quantity', 'price_gave')->where(['storage_id' => $id, 'deleted_at' => null])->get()->load('article', 'color');
 
         $meta = [
             'status' => [
@@ -54,7 +56,7 @@ class ContainersController extends Controller
 
         return response()->json([
             'meta' => $meta,
-            'data' => $container
+            'data' => ['container' => $container, 'storageEntries' => $storage_suppliers]
         ]);
     }
 

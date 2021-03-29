@@ -14,7 +14,7 @@ class RapportController extends Controller
 
         $date =  $date??date('Y-m-d');
         
-        $purchases = Article_shop::where([['dtn', $date],['shop_id', $shop_id]])->orderBy('time', 'desc')->get()->load('article','color');
+        $purchases = Article_shop::where([['dtn', $date],['shop_id', $shop_id]])->orderBy('time', 'desc')->get()->load('liaison','user','article','color');
 
         $spends = Spend::where([['date', $date],['shop_id', $shop_id]])->orderBy('time', 'desc')->get()->load('spendtype');
 

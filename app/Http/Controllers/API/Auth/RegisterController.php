@@ -49,6 +49,7 @@ class RegisterController extends Controller
             'name' => $request['name'],
             'email' => $request['email'],
             'actif' => 1,
+            'rule_id'   => $request['rule_id'],
             'password' => Hash::make($request['password']),
             'api_token' => Str::random(60),
         ]);

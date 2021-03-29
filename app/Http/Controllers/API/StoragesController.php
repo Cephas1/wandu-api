@@ -4,6 +4,8 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\Storage;
+use App\Models\Storage_supplier;
+use App\Models\Shop_storage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -147,6 +149,56 @@ class StoragesController extends Controller
         return response()->json([
             'meta' => $meta,
             'data' => 'id : ' . $id
+        ]);
+    }
+
+    public function dashboard($storage_id){
+
+        $meta = [
+            'status' => [
+                'code'  => 200,
+                'message'   => 'OK'
+            ],
+            'message'   => 'Storage dashboard'
+        ];
+
+        //$storage_id = 6;
+
+        $storage = Storage::select(['id' ,'name', 'location', 'phone', 'email'])->firstWhere('id',$storage_id);
+
+        $approvisionnements = Storage_supplier::where('storage_id', $storage_id)->orderBy('date', 'desc')->get();
+        $approvisionnements = $approvisionnements->groupBy('date');
+
+        $livraisons = Shop_storage::where('storage_id', $storage_id)->orderBy('date', 'desc')->get()->load('Shop', 'User');
+        $livraisons = $livraisons->groupBy('date');
+
+        $days_supplies = [];
+        foreach($approvisionnements as $key => $values){
+            $temp = explode(' ', $key);
+            $sum = 0;
+            foreach($values as $value){
+                $sum = $sum + $value->quantity;
+            }
+            $days_supplies[$temp[0]] = $sum;
+        }
+
+        $days_livraisons = [];
+        foreach($livraisons as $key => $values){
+            $temp = explode(' ', $key);
+            $sum = 0;
+            foreach($values as $value){
+                $sum = $sum + $value->quantity;
+            }
+            $days_livraisons[$temp[0]] = $sum;
+        }
+
+        return response()->json([
+            'meta' => $meta,
+            'data' => [
+                'storage' => $storage,
+                'approvisionnements'    => [$days_supplies],
+                'livraisons'    => [$days_livraisons]
+            ]
         ]);
     }
 }

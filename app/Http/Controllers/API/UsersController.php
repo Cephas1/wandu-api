@@ -16,7 +16,7 @@ class UsersController extends Controller
      */
     public function index()
     {
-        $users = User::where([['actif', 1], ['deleted_at', '=', null]])->get();
+        $users = User::where([['actif', 1], ['deleted_at', '=', null]])->get()->load('rule');
         
         $meta = [
             'status' => [
@@ -29,6 +29,29 @@ class UsersController extends Controller
         return response()->json([
             'meta' => $meta,
             'data' => $users
+        ]);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id){
+        
+        $user = User::find($id);
+        
+        $meta = [
+            'status' => [
+                'code'  => 200,
+                'message'   => 'OK'
+            ],
+            'message'   => 'User connected'
+        ];
+
+        return response()->json([
+            'meta' => $meta,
+            'data' => $user
         ]);
     }
 
@@ -137,7 +160,7 @@ class UsersController extends Controller
         }
             
         return response()->json([
-            'meta' => $meta,
+            'meta' => $meta
         ]);
      }
 
