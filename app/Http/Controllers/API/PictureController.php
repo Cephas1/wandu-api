@@ -8,9 +8,9 @@ use Illuminate\Support\Facades\Storage;
 
 class PictureController extends Controller
 {
-    public function getPicture($url) {
+    public function getPicture(Request $request) {
 
-        $ab_path = public_path($url);
+        $ab_path = public_path($request['image']);
         
         return response()->download($ab_path);
     }

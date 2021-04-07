@@ -30,6 +30,50 @@ class SpendsController extends Controller
             'data' => $spends
         ]);
     }
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function shop_spends($id)
+    {
+        $spends = Spend::where([['date', date('y-m-d')], ["shop_id", $id]])->orderBy('time', 'desc')->get()->load('spendtype','shop');
+
+        $meta = [
+          'status' => [
+              'code' => 200,
+              'message' => 'OK'
+          ],
+            'message' => 'List of spends'
+        ];
+
+        return response()->json([
+            'meta' => $meta,
+            'data' => $spends
+        ]);
+    }
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function storage_spends($id)
+    {
+        $spends = Spend::where([['date', date('y-m-d')], ["storage_id", $id]])->orderBy('time', 'desc')->get()->load('spendtype','shop');
+
+        $meta = [
+          'status' => [
+              'code' => 200,
+              'message' => 'OK'
+          ],
+            'message' => 'List of spends'
+        ];
+
+        return response()->json([
+            'meta' => $meta,
+            'data' => $spends
+        ]);
+    }
 
     /**
      * Show the form for creating a new resource.
@@ -62,9 +106,9 @@ class SpendsController extends Controller
             'price'       => $request['price'],
             'spendtype_id'=> $request['spendtype_id'],
             'shop_id'     => $request['shop_id'],
+            'user_id'     => $request['user_id'],
             'date'        => date('y-m-d'),
-            'time'        => date('H:i:s'),
-            'user_id'     => 1
+            'time'        => date('H:i:s')
         );
         $spend = Spend::create($data);
 

@@ -20,7 +20,6 @@ class CreateArticleShopsTable extends Migration
             $table->integer("shop_id");
             $table->integer("liaison_id");
             $table->integer("user_id");
-            $table->dateTime("date");
             $table->integer("quantity");
             $table->integer("price_got");
             $table->dateTime("deleted_at")->nullable();

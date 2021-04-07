@@ -78,20 +78,22 @@ class PurchasesController extends Controller
             'message'   => 'Failure request'
         ];
 
+        $meta_data = $request["meta_data"];
+        $purchases = $request["purchases"];
+
         $liaison = array(
             "name"      => "PU" . rand(1, 99) . now()->dayOfYear,
             "number"    => rand(1, 99999999999),
             "purchases" => 1,
-            "shop_id"   => 1
+            "shop_id"   => $meta_data["shop_id"]
         );
         $liaison = Liaison::create($liaison);
 
-        $purchases = $request["purchases"];
         for($i = 0; $i < count($purchases); $i++)
         {
             // Verify if this article is in the shop container
             $container = Container::where([
-                ["shop_id", 3],
+                ["shop_id", $meta_data["shop_id"]],
                 ["article_id", $purchases[$i]["article_id"]],
                 ["color_id", $purchases[$i]["color_id"]]
             ])->first();
@@ -103,12 +105,11 @@ class PurchasesController extends Controller
                     "color_id"        => $purchases[$i]["color_id"],
                     "quantity"        => $purchases[$i]["quantity"],
                     "price_got"        => $purchases[$i]["price_got"],
-                    "date"        => now(),
-                    "dtn"         => date('y-m-d'),
-                    "time"        => date('H:i:s'),
-                    "shop_id"        => 1,
-                    "user_id"        => 1,
-                    "liaison_id"        => $liaison->id
+                    "shop_id"        => $meta_data["shop_id"],
+                    "user_id"        => $meta_data["user_id"],
+                    "liaison_id"        => $liaison->id,
+                    "date"        => date('Y-m-d'),
+                    "time"        => date('H:i:s')
                 );
                 $purchase = Article_shop::create($purchase);
 

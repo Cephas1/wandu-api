@@ -20,7 +20,31 @@ class SuppliesController extends Controller
      */
     public function index()
     {
-        $supply_liaisons = Liaison::where([["provides", 1],["storage_id", 1]])->orderBy('created_at', 'desc')->get()->load("supplier","storage_suppliers.article", "storage_suppliers.color");
+        $supply_liaisons = Liaison::where("provides", 1)->orderBy('created_at', 'desc')->get()->load("supplier","storage_suppliers.article", "storage_suppliers.color");
+
+        $meta = [
+            'status' => [
+                'code'  => 200,
+                'message'   => 'OK'
+            ],
+            'message'   => 'List of supply liaisons'
+        ];
+
+        return response()->json([
+            'meta' => $meta,
+            'data' => $supply_liaisons
+        ]);
+    }
+
+    /**
+     * Display a listing of the resource for storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function index_one($id)
+    {
+        $supply_liaisons = Liaison::where([["provides", 1],["storage_id", $id]])->orderBy('created_at', 'desc')->get()->load("supplier","storage_suppliers.article", "storage_suppliers.color");
 
         $meta = [
             'status' => [
@@ -78,14 +102,15 @@ class SuppliesController extends Controller
         ];
 
         $supplies = $request["supplies"];
+        $meta_data = $request["meta_data"];
 
         // Create the reference of supplies
         $liaison = array(
             "name"          => "SUP" . rand(1, 99) . now()->dayOfYear,
             "number"        => rand(1, 99999999999),
             "provides"      =>1,
-            "storage_id"    => 1,
-            "supplier_id"   => $supplies[0]["supplier_id"]
+            "storage_id"    => $meta_data["storage_id"],
+            "supplier_id"   => $meta_data["supplier_id"]
         );
         $liaison = Liaison::create($liaison);
 
@@ -93,16 +118,16 @@ class SuppliesController extends Controller
         {
             // Save provided article one by one
             $supply = array(
+                "liaison_id"        => $liaison->id,
                 "article_id"        => $supplies[$i]["article_id"],
                 "color_id"        => $supplies[$i]["color_id"],
-                "supplier_id"        => $supplies[$i]["supplier_id"],
                 "quantity"        => $supplies[$i]["quantity"],
                 "price_gave"        => $supplies[$i]["price_gave"],
-                "storage_id"        => 1,
-                "user_id"        => 1,
+                "supplier_id"        => $meta_data["supplier_id"],
+                "storage_id"        => $meta_data["storage_id"],
+                "user_id"        => $meta_data["user_id"],
                 "date"        => date('Y-m-d'),
-                "time"        => date('H:i:s'),
-                "liaison_id"        => $liaison->id
+                "time"        => date('H:i:s')
             );
             $supply = Storage_supplier::create($supply);
 

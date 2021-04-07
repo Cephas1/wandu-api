@@ -18,7 +18,7 @@ class DeliverancesController extends Controller
      */
     public function index()
     {
-        $deliverance_liaisons = Liaison::where([["deliverances","=", 1],["storage_id", "=", 1]])->orderBy('created_at', 'desc')->get()->load("shop");
+        $deliverance_liaisons = Liaison::where([["deliverances","=", 1],["storage_id", "=", 1]])->orderBy('created_at', 'desc')->get()->load("shop", "shop_storage.article", "shop_storage.color");
 
         $meta = [
             'status' => [
@@ -58,13 +58,35 @@ class DeliverancesController extends Controller
     }
 
     /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function storageDeliverance($id)
+    {
+        $deliverance_liaisons = Liaison::where([["deliverances","=", 1],["storage_id", "=", $id]])->orderBy('created_at', 'desc')->get()->load("shop", "shop_storage.article", "shop_storage.color");
+
+        $meta = [
+            'status' => [
+                'code'  => 200,
+                'message'   => 'OK'
+            ],
+            'message'   => 'List of supply liaisons'
+        ];
+
+        return response()->json([
+            'meta' => $meta,
+            'data' => $deliverance_liaisons
+        ]);
+    }
+
+    /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function create()
     {
-
         $meta = [
             'status' => [
                 'code'  => 200,
@@ -89,8 +111,8 @@ class DeliverancesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
+    public function store(Request $request){
+
         $meta = [
             'status' => [
                 'code'  => 200,
@@ -122,11 +144,13 @@ class DeliverancesController extends Controller
                 'storage_id'        => $meta_data["storage_id"],
                 'shop_id'           => $meta_data["shop_id"],
                 'user_id'           => $meta_data["user_id"],
-                'date'              => date('Y-m-d')
+                'date'              => date('Y-m-d'),
+                'time'              => date('H:i:s')
             );
 
             $deliverance = Shop_storage::create($deliverance);
 
+            //////////////////////////////////////////////////////////////////////////////////////////
             // decrement of a specific container of storage
             $storage_container = Container::where([
                 ["storage_id", $deliverance->storage_id],
@@ -136,6 +160,27 @@ class DeliverancesController extends Controller
 
             $storage_container->quantity = $storage_container->quantity - $deliverance->quantity;
             $storage_container->save();
+
+            ///////////////////////////////////////////////////////////////////////////////////////////
+            // Increment the specific container of shop
+            $shop_container = Container::where([
+                ["shop_id", $deliverance->shop_id],
+                ["article_id", $deliverance->article_id],
+                ["color_id", $deliverance->color_id]
+            ])->first();
+
+            if($shop_container){
+                $shop_container->quantity = $shop_container + $deliverance->quantity;
+                $shop_container->save();
+            }else{
+                $new_shop_container = array(
+                    "article_id"    => $deliverance->article_id,
+                    "color_id"      => $deliverance->color_id,
+                    "shop_id"       => $deliverance->shop_id,
+                    "quantity"      => $deliverance->quantity
+                );
+                Container::create($new_shop_container);
+            }
         }
 
         $notification_data = array(
@@ -145,9 +190,7 @@ class DeliverancesController extends Controller
         $notification = Notification::create($notification_data);
 
         if($notification){
-
             $meta['message'] = "Deliverance saved successful";
-
             return response()->json([
                 'meta' => $meta,
                 'data' => $liaison
@@ -161,8 +204,8 @@ class DeliverancesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
+    public function show($id){
+
         $deliverances = Shop_storage::where("liaison_id", $id)->get();
 
         $meta = [

@@ -51,7 +51,7 @@ class ShopsController extends Controller
         $container = Container::where('shop_id', $shop_id);
 
         $purchases = Article_shop::where('shop_id', $shop_id)->get();
-        $purchases = $purchases->groupBy('dtn');
+        $purchases = $purchases->groupBy('date');
 
         $days_sold = [];
         foreach($purchases as $key => $values){

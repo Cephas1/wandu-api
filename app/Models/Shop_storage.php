@@ -23,4 +23,12 @@ class Shop_storage extends Model
     public function color(){
         return $this->belongsTo('App\Models\Color');
     }
+
+    public function liaison(){
+        return $this->belongsTo('App\Models\Liaison');
+    }
+
+    public function storage(){
+        return $this->belongsTo('App\Models\Storage');
+    }
 }

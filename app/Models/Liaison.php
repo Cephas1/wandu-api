@@ -36,4 +36,12 @@ class Liaison extends Model
     public function storage_suppliers(){
         return $this->hasMany('App\Models\Storage_supplier');
     }
+
+    public function article_shop(){
+        return $this->belongsTo('App\Models\Article_shop');
+    }
+
+    public function container(){
+        return $this->belongsTo('App\Models\Container');
+    }
 }

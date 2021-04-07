@@ -14,8 +14,8 @@ class AddColumnDateAndTimeToArticleShopTable extends Migration
     public function up()
     {
         Schema::table('article_shops', function (Blueprint $table) {
-            $table->date("dtn");
-            $table->time("time");
+            $table->date("date")->after("price_got");
+            $table->time("time")->after("price_got");
         });
     }
 
@@ -27,7 +27,7 @@ class AddColumnDateAndTimeToArticleShopTable extends Migration
     public function down()
     {
         Schema::table('article_shops', function (Blueprint $table) {
-            $table->dropColumn(["dtn", "time"]);
+            $table->dropColumn(["date", "time"]);
         });
     }
 }
