@@ -21,6 +21,7 @@ Route::middleware('auth:api')->namespace('API')->group(function (){
 
     Route::resource('articles', 'ArticlesController');
     Route::resource('categories', 'CategoriesController');
+    Route::resource('colors', 'ColorsController');
     Route::resource('shops', 'ShopsController');
     Route::resource('storages', 'StoragesController');
 
@@ -66,8 +67,8 @@ Route::middleware('auth:api')->namespace('API')->group(function (){
     Route::put('/users/password/{id}', 'UsersController@changePassword')->name('users.password');
     Route::post('/users/storepicture/{id}', 'UsersController@storePicture')->name('users.storePicture');
     
-    Route::post('/shop_inventaire', 'ComptaController@shop_inventaire');
-    Route::post('/storage_inventaire', 'ComptaController@storage_inventaire');
+    Route::post('/inventaire/shop', 'ComptaController@shop_inventaire');
+    Route::post('/inventaire/storage', 'ComptaController@storage_inventaire');
 
     Route::post('/getpicture', 'PictureController@getPicture');
 

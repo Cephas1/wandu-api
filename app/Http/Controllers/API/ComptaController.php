@@ -5,6 +5,8 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Storage_supplier;
+use App\Models\Container;
+use App\Models\Article;
 use App\Models\Article_shop;
 use App\Models\Shop_storage;
 
@@ -23,77 +25,54 @@ class ComptaController extends Controller
         $date_debut = $request['date_debut'];
         $date_fin = $request['date_fin'];
         $shop_id = $request['shop_id'];
-        $livraisons = [];
-        $ventes = [];
+        $article_id = $request['article_id'];
 
-        if($shop_id){
+        $product = Article::select('name', 'price_1', 'price_2', 'price_3', 'price_4')->find($article_id);
 
-            $entrees = Shop_storage::where('shop_id', $shop_id)->whereBetween('date', [$date_debut, $date_fin])->get()->load('article', 'color');
-            $entrees = $entrees->groupBy(['article.name', 'color.name']);
-
-            $sorties = Article_shop::where('shop_id', $shop_id)->whereBetween('date', [$date_debut, $date_fin])->get()->load('article', 'color');
-            $sorties = $sorties->groupBy(['article.name', 'color.name']);
-
-        }else {
-
-            $entrees = Shop_storage::whereBetween('date', [$date_debut, $date_fin])->get()->load('article', 'color');
-            $entrees = $entrees->groupBy(['article.name', 'color.name']);
-
-            $sorties = Article_shop::whereBetween('date', [$date_debut, $date_fin])->get()->load('article', 'color');
-            $sorties = $sorties->groupBy(['article.name', 'color.name']);
-
-        }
+        // Debut du traitement des livraisons
+        $entrees = Shop_storage::where([['shop_id', $shop_id], ['article_id', $article_id]])->whereBetween('date', [$date_debut, $date_fin])->get()->load('color');
+        $entrees = $entrees->groupBy('color.name');
         
-        foreach($entrees as $product_name => $values){
-
-            $livraison = [];
-
-            foreach($values as $color_name => $val){
-                $details = [];
-                $quantity = 0;
-
-                foreach($val as $v){
-                    $details['prix_gros'] = $v->article->price_1;
-                    $quantity = $quantity + $v->quantity;
-                }
-                $details['quantity'] = $quantity;
-
-
-                $livraison[] = [$color_name => $details];
+        $livraisons = [];
+        foreach($entrees as $key => $values){
+            
+            $quantity = 0;
+            foreach($values as $value){
+                $quantity = $quantity + $value->quantity;
             }
-
-            $livraisons[] = [$product_name => $livraison];
+            $livraisons[] = ['color' => $key, 'quantity' => $quantity];
         }
+        // Fin du traitement des livraisons
 
-        foreach($sorties as $product_name => $values){
-
-            $vente = [];
-
-            foreach($values as $color_name => $val){
-
-                $details = [];
-                $total_vente = 0;
-                $quantity = 0;
-
-                foreach($val as $v){
-                    $details['prix_gros'] = $v->article->price_1;
-                    $quantity = $quantity + $v->quantity;
-                    $total_vente = $total_vente + ($v->price_got * $v->quantity);
-                }
-                $details['quantity'] = $quantity;
-                $details['total_achat'] = $total_vente;
-
-
-                $vente[] = [$color_name => $details];
+        // Debut du traitement des ventes
+        $sorties = Article_shop::where([['shop_id', $shop_id], ['article_id', $article_id]])->whereBetween('date', [$date_debut, $date_fin])->get()->load('color');
+        $sorties = $sorties->groupBy('color.name');
+        
+        $ventes = [];
+        foreach($sorties as $key => $values){
+            
+            $quantity = 0;
+            $recette = 0;
+            foreach($values as $value){
+                $quantity = $quantity + $value->quantity;
+                $recette = $recette + ($value->quantity * $value->price_got);
             }
-
-            $ventes[] = [$product_name => $vente];
+            $ventes[] = ['color' => $key, 'quantity' => $quantity, 'recette' => $recette];
         }
+        // Fin du traitement des ventes
 
+        // Debut du traitement du stock disponible
+        $container = Container::where([['shop_id', $shop_id], ['article_id', $article_id]])->get()->load('color');
+        
+        $stock = [];
+        foreach($container as $value){            
+            $stock[] = ['color' => $value->color->name, 'quantity' => $value->quantity];
+        }
+        // Fin du traitement du stock disponible
 
         return response()->json([
             'meta' => $meta,
-            'data' => ['entrees' => $livraisons, 'sorties' => $ventes]
+            'data' => ['product' => $product, 'entrees' => $livraisons, 'sorties' => $ventes, 'stock' => $stock]
         ]);
     }
 
@@ -110,62 +89,52 @@ class ComptaController extends Controller
         $date_debut = $request['date_debut'];
         $date_fin = $request['date_fin'];
         $storage_id = $request['storage_id'];
-        $livraisons = [];
-        $ventes = [];
+        $article_id = $request['article_id'];
 
-        // Traitement des entrees
-        $entrees = Storage_supplier::where('storage_id', $storage_id)->whereBetween('date', [$date_debut, $date_fin])->get()->load('article', 'color');
-        $entrees = $entrees->groupBy(['article.id', 'color.id']);        
+        // Debut du traitement des livraisons
+        $entrees = Storage_supplier::where([['storage_id', $storage_id], ['article_id', $article_id]])->whereBetween('date', [$date_debut, $date_fin])->get()->load('color');
+        $entrees = $entrees->groupBy('color.name');
         
-        foreach($entrees as $product_name => $values){
-
-            $livraison = [];
-
-            foreach($values as $color_name => $val){
-                $details = [];
-                $quantity = 0;
-
-                foreach($val as $v){
-                    $details['prix_achat'] = "A revoir";
-                    $quantity = $quantity + $v->quantity;
-                }
-                $details['quantity'] = $quantity;
-
-
-                $livraison[] = [$color_name => $details];
+        $livraisons = [];
+        foreach($entrees as $key => $values){
+            
+            $quantity = 0;
+            $cout = 0;
+            foreach($values as $value){
+                $quantity = $quantity + $value->quantity;
+                $cout = $cout + ($value->quantity * $value->price_gave);
             }
-
-            $livraisons[] = [$product_name => $livraison];
+            $livraisons[] = ['color' => $key, 'quantity' => $quantity, 'cout' => $cout];
         }
+        // Fin du traitement des livraisons
 
-        // Traitement des sorties
-        $sorties = Shop_storage::where('storage_id', $storage_id)->whereBetween('date', [$date_debut, $date_fin])->get()->load('article', 'color');
-        $sorties = $sorties->groupBy(['article.name', 'color.name']);        
-
-        foreach($sorties as $product_name => $values){
-
-            $vente = [];
-
-            foreach($values as $color_name => $val){
-
-                $details = [];
-                $quantity = 0;
-
-                foreach($val as $v){
-                    $quantity = $quantity + $v->quantity;
-                }
-                $details['quantity'] = $quantity;
-
-
-                $vente[] = [$color_name => $details];
+        // Debut du traitement des approvisionnements des boutiques
+        $sorties = Shop_storage::where([['storage_id', $storage_id], ['article_id', $article_id]])->whereBetween('date', [$date_debut, $date_fin])->get()->load('color');
+        $sorties = $sorties->groupBy('color.name');
+        
+        $deliverances = [];
+        foreach($sorties as $key => $values){
+            
+            $quantity = 0;
+            foreach($values as $value){
+                $quantity = $quantity + $value->quantity;
             }
-
-            $ventes[] = [$product_name => $vente];
+            $deliverances[] = ['color' => $key, 'quantity' => $quantity];
         }
+        // Fin du traitement des approvisionnements des boutiques
+
+        // Debut du traitement du stock disponible
+        $container = Container::where([['storage_id', $storage_id], ['article_id', $article_id]])->get()->load('color');
+        
+        $stock = [];
+        foreach($container as $value){            
+            $stock[] = ['color' => $value->color->name, 'quantity' => $value->quantity];
+        }
+        // Fin du traitement du stock disponible
 
         return response()->json([
             'meta' => $meta,
-            'data' => ['entrees' => $livraisons, 'sorties' => $ventes]
+            'data' => ['entrees' => $livraisons, 'sorties' => $deliverances, 'stock' => $stock]
         ]);
 
     }
