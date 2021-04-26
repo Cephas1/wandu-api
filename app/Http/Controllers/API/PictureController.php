@@ -13,5 +13,6 @@ class PictureController extends Controller
         $ab_path = public_path($request['image']);
         
         return response()->download($ab_path);
+        //return response()->json($ab_path);
     }
 }

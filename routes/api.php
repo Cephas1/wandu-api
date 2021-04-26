@@ -67,9 +67,12 @@ Route::middleware('auth:api')->namespace('API')->group(function (){
     Route::put('/users/password/{id}', 'UsersController@changePassword')->name('users.password');
     Route::post('/users/storepicture/{id}', 'UsersController@storePicture')->name('users.storePicture');
     
+    // Inventory
     Route::post('/inventaire/shop', 'ComptaController@shop_inventaire');
     Route::post('/inventaire/storage', 'ComptaController@storage_inventaire');
+    Route::post('/inventaire/all', 'ComptaController@all_inventaire');
 
+    // Picture getting
     Route::post('/getpicture', 'PictureController@getPicture');
 
     // Notification's route

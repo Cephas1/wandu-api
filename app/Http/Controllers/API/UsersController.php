@@ -128,7 +128,7 @@ class UsersController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-     public function storePicture(Request $request, $id ) {
+     public function storePicture(Request $request, $id) {
          
         $meta = [
             'status' => [
@@ -138,11 +138,11 @@ class UsersController extends Controller
             'message'   => "Error file"
         ];
 
-        $user = User::find($id);
-
-        $file = $request->file('image');
+        $file = $request->file("image");
 
         if($file != null){
+
+            $user = User::find($id);
 
             $image = $user->id.'.'.$file->getClientOriginalExtension();
 

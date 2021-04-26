@@ -17,7 +17,7 @@ class ColorsController extends Controller
     public function index()
     {
         
-        $colors = Color::where('deleted_at','=', null)->get('name');
+        $colors = Color::where('deleted_at','=', null)->orderBy('name')->get('name');
 
         $meta = [
             'status' => [

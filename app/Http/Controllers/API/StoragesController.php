@@ -152,7 +152,7 @@ class StoragesController extends Controller
         ]);
     }
 
-    public function dashboard($storage_id){
+    public function dashboard($id){
 
         $meta = [
             'status' => [
@@ -164,12 +164,12 @@ class StoragesController extends Controller
 
         //$storage_id = 6;
 
-        $storage = Storage::select(['id' ,'name', 'location', 'phone', 'email'])->firstWhere('id',$storage_id);
+        $storage = Storage::select(['id' ,'name', 'location', 'phone', 'email'])->firstWhere('id',$id);
 
-        $approvisionnements = Storage_supplier::where('storage_id', $storage_id)->orderBy('date', 'desc')->get();
+        $approvisionnements = Storage_supplier::where('storage_id', $id)->orderBy('date', 'desc')->get();
         $approvisionnements = $approvisionnements->groupBy('date');
 
-        $livraisons = Shop_storage::where('storage_id', $storage_id)->orderBy('date', 'desc')->get()->load('Shop', 'User');
+        $livraisons = Shop_storage::where('storage_id', $id)->orderBy('date', 'desc')->get()->load('Shop', 'User');
         $livraisons = $livraisons->groupBy('date');
 
         $days_supplies = [];

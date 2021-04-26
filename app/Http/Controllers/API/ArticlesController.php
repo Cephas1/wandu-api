@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Models\Article;
+use App\Models\Article_shop;
+use App\Models\Storage_supplier;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Validator;
 
@@ -44,7 +46,7 @@ class ArticlesController extends Controller
     {
         $validation = Validator::make($request->all(),[
             'name'       => 'required|string',
-            'description'       => 'nullable|string|min:5',
+            'description'       => 'nullable|string|min:3',
             'price_1'       => 'required|integer',
             'price_2'       => 'required|integer',
             'price_3'       => 'required|integer',
@@ -98,7 +100,25 @@ class ArticlesController extends Controller
      */
     public function show($id)
     {
-        $article = Article::where([['deleted_at', null],['id', $id]])->first();
+        $article = Article::where([['deleted_at', null],['id', $id]])->first()->load('category');
+
+        $entres = Storage_supplier::where('article_id', $id)->get();
+        $livraisons_q = 0;
+        $livraisons_c = 0;
+        foreach($entres as $entre){
+            $livraisons_q = $livraisons_q + $entre->quantity;
+            $livraisons_c = $livraisons_c + ($entre->price_gave * $entre->quantity);
+        }
+        $livraisons = ['provided' => $livraisons_q, 'cost' => $livraisons_c];
+
+        $sorties = Article_shop::where('article_id', $id)->get();
+        $ventes_q = 0;
+        $ventes_c = 0;
+        foreach($sorties as $sortie){
+            $ventes_q = $ventes_q + $sortie->quantity;
+            $ventes_c = $ventes_c + ($sortie->quantity * $sortie->price_got);
+        }
+        $ventes = ['sold' => $ventes_q, 'gain' => $ventes_c];
 
         $meta = [
             'status' => [
@@ -113,7 +133,7 @@ class ArticlesController extends Controller
 
         return response()->json([
             'meta' => $meta,
-            'data' => $article
+            'data' => ['product' => $article, 'entrees' => $livraisons, 'sorties' => $ventes]
         ]);
     }
 

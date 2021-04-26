@@ -15,4 +15,12 @@ class Container extends Model
     public function color(){
         return $this->belongsTo('App\Models\Color');
     }
+
+    public function shop(){
+        return $this->belongsTo('App\Models\Shop');
+    }
+
+    public function storage(){
+        return $this->belongsTo('App\Models\Storage');
+    }
 }
