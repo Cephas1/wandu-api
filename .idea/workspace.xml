@@ -20,28 +20,57 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3615ce3b-5cdd-4a88-847a-5ad3531456aa" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/database/migrations/2021_05_15_113733_add_column_date_and_time_to_liaisons_table.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/database/migrations/2021_05_15_181853_add_column_user_id_to_liaisons_table.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/Http/Controllers/WEB/BasketsController.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/Http/Controllers/WEB/ProductsController.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/Http/Controllers/WEB/ShopsController.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/Models/Basket.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/database/migrations/2021_06_04_165658_create_baskets_table.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/template/assets/img/about/1.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/template/assets/img/about/2.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/template/assets/img/about/3.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/template/assets/img/about/4.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/template/assets/img/close-icon.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/template/assets/img/favicon.ico" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/template/assets/img/header-bg.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/template/assets/img/logos/creative-market.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/template/assets/img/logos/designmodo.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/template/assets/img/logos/envato.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/template/assets/img/logos/themeforest.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/template/assets/img/map-image.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/template/assets/img/navbar-logo.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/template/assets/img/portfolio/01-full.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/template/assets/img/portfolio/01-thumbnail.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/template/assets/img/portfolio/02-full.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/template/assets/img/portfolio/02-thumbnail.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/template/assets/img/portfolio/03-full.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/template/assets/img/portfolio/03-thumbnail.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/template/assets/img/portfolio/04-full.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/template/assets/img/portfolio/04-thumbnail.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/template/assets/img/portfolio/05-full.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/template/assets/img/portfolio/05-thumbnail.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/template/assets/img/portfolio/06-full.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/template/assets/img/portfolio/06-thumbnail.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/template/assets/img/team/1.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/template/assets/img/team/2.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/template/assets/img/team/3.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/template/assets/mail/contact_me.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/template/assets/mail/contact_me.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/template/assets/mail/jqBootstrapValidation.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/template/css/styles.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/template/index.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/template/js/scripts.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/views/about.blade.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/views/contact.blade.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/views/layouts/index.blade.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/views/products/index.blade.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/views/products/show.blade.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/views/shops/index.blade.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/views/shops/show.blade.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/views/team.blade.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/API/ArticlesController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/API/ArticlesController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/API/Auth/LoginController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/API/Auth/LoginController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/API/Auth/RegisterController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/API/Auth/RegisterController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/API/CategoriesController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/API/CategoriesController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/API/ColorsController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/API/ColorsController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/API/ContainersController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/API/ContainersController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/API/DeliverancesController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/API/DeliverancesController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/API/PictureController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/API/PictureController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/API/PurchasesController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/API/PurchasesController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/API/ShopsController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/API/ShopsController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/API/StoragesController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/API/StoragesController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/API/SuppliersController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/API/SuppliersController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/API/SuppliesController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/API/SuppliesController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/API/UsersController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/API/UsersController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Models/Liaison.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/Liaison.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/User.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/User.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/seeds/RuleSeeder.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/seeds/RuleSeeder.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/seeds/UserSeeder.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/seeds/UserSeeder.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/api.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/api.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Models/Spend.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/Spend.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/home.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/home.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/web.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/web.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -81,12 +110,17 @@
     <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="FullScreen" value="false" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/resources/views/products" />
     <property name="recentsLimit" value="5" />
     <property name="settings.editor.selected.configurable" value="configurable.group.build" />
     <property name="show.migrate.to.gradle.popup" value="false" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\laragon\www\myapi\resources\views\products" />
+      <recent name="C:\laragon\www\myapi\resources\views\shops" />
+      <recent name="C:\laragon\www\myapi\resources\views" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\laragon\www\myapi\app\Http\Controllers\API" />
     </key>
@@ -130,6 +164,14 @@
       <option name="presentableId" value="Default" />
       <updated>1595502057245</updated>
     </task>
+    <task id="LOCAL-00001" summary="Correcting bugs">
+      <created>1622800089553</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1622800089554</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -174,6 +216,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+    <MESSAGE value="Correcting bugs" />
+    <option name="LAST_COMMIT_MESSAGE" value="Correcting bugs" />
   </component>
   <component name="WindowStateProjectService">
     <state x="137" y="14" width="1092" height="714" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1622117649715">
