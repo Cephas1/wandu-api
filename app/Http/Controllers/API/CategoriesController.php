@@ -65,8 +65,6 @@ class CategoriesController extends Controller
 
         $data = [
             'name'      => $request['name'],
-            'code'      => $request['code'],
-            'unity'     => $request['unity']
         ];
 
         $category = Category::create($data);

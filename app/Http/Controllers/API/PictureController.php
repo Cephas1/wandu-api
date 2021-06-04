@@ -11,8 +11,8 @@ class PictureController extends Controller
     public function getPicture(Request $request) {
 
         $ab_path = public_path($request['image']);
-        
-        return response()->download($ab_path);
+
+        return response()->file($ab_path);
         //return response()->json($ab_path);
     }
 }

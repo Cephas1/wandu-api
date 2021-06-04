@@ -15,9 +15,10 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::post('/login', 'API\Auth\LoginController@getToken');
-Route::post('/register', 'API\Auth\RegisterController@create');
 
 Route::middleware('auth:api')->namespace('API')->group(function (){
+
+    Route::post('/register', 'Auth\RegisterController@create');
 
     Route::resource('articles', 'ArticlesController');
     Route::resource('categories', 'CategoriesController');
@@ -42,6 +43,7 @@ Route::middleware('auth:api')->namespace('API')->group(function (){
     // Dashboard
     Route::get('/shops/dashboard/{id}', 'ShopsController@dashboard');
     Route::get('/storages/dashboard/{id}', 'StoragesController@dashboard');
+    Route::get('/dashboard/cashier/{shop_id}', 'ShopsController@cashier');
     Route::get('/dashboard/{date_debut}/{date_fin}', 'DashboardController@admin');
     Route::get('/dashboard/{shop_id}/{date_debut}/{date_fin}', 'DashboardController@shop');
 
@@ -65,8 +67,9 @@ Route::middleware('auth:api')->namespace('API')->group(function (){
     Route::get('/users/{id}', 'UsersController@show');
     Route::put('/users/actif/{id}', 'UsersController@desactiveOrActiveUser')->name('users.actif');
     Route::put('/users/password/{id}', 'UsersController@changePassword')->name('users.password');
+    Route::get('/users/password/reset/{id}', 'UsersController@resetPassword');
     Route::post('/users/storepicture/{id}', 'UsersController@storePicture')->name('users.storePicture');
-    
+
     // Inventory
     Route::post('/inventaire/shop', 'ComptaController@shop_inventaire');
     Route::post('/inventaire/storage', 'ComptaController@storage_inventaire');
@@ -80,7 +83,7 @@ Route::middleware('auth:api')->namespace('API')->group(function (){
     Route::post('/notifications/getnotifications', 'NotificationController@getNotifications');
     Route::post('/notifications/confirm', 'NotificationController@confirmed');
 
-    // Purchases's routes    
+    // Purchases's routes
     Route::resource('purchases', 'PurchasesController');
     Route::get('/purchases/getcontainer/{id}', 'PurchasesController@getcontainer');
 });

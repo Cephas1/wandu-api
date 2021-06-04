@@ -142,7 +142,7 @@ class ArticlesController extends Controller
      */
     public function create()
     {
-        $categories = Category::all();
+        $categories = Category::orderBy('name')->get();
 
         $meta = [
             'status' => [

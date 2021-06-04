@@ -30,9 +30,7 @@ class RegisterController extends Controller
         ];
 
         $validation = Validator::make($request->all(),[
-            'name'       => 'required|string|max:255',
-            'email'       => 'required|string|email|max:255|unique:users',
-            'password'       => 'required|string|min:8'
+            'name'       => 'required|string|max:255'
         ]);
 
         if($validation->fails()){
@@ -47,10 +45,10 @@ class RegisterController extends Controller
 
         $user = User::create([
             'name' => $request['name'],
-            'email' => $request['email'],
-            'actif' => 1,
             'rule_id'   => $request['rule_id'],
-            'password' => Hash::make($request['password']),
+            'email' => Str::random(60) . '@wandu.cg',
+            'password' => Hash::make(1234),
+            'actif' => 1,
             'api_token' => Str::random(60),
         ]);
 

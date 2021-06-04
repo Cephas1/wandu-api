@@ -110,7 +110,10 @@ class SuppliesController extends Controller
             "number"        => rand(1, 99999999999),
             "provides"      =>1,
             "storage_id"    => $meta_data["storage_id"],
-            "supplier_id"   => $meta_data["supplier_id"]
+            "supplier_id"   => $meta_data["supplier_id"],
+            "user_id"   => $meta_data["user_id"],
+            "date"          => date('Y-m-d'),
+            "time"          => date('H:i:s')
         );
         $liaison = Liaison::create($liaison);
 

@@ -123,6 +123,34 @@ class UsersController extends Controller
     }
 
     /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function resetPassword($id)
+    {
+        $meta = [
+            'status' => [
+                'code'  => 200,
+                'message'   => 'OK'
+            ],
+            'message'   => "Password reset"
+        ];
+
+        $user = User::find($id);
+
+        if($user){
+
+            $user->password = Hash::make(1234);
+            $user->save();
+
+            return response()->json([
+                'meta' => $meta
+            ]);
+        }
+    }
+
+    /**
      * Store the picture
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response

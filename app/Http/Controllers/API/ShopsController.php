@@ -8,6 +8,7 @@ use App\Models\Spend;
 use App\Models\Article_shop;
 use App\Models\Shop_storage;
 use App\Models\Container;
+use App\Models\Liaison;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -33,6 +34,38 @@ class ShopsController extends Controller
         return response()->json([
             'meta' => $meta,
             'data' => $shops
+        ]);
+    }
+
+    public function cashier($shop_id){
+
+        $meta = [
+            'status' => [
+                'code'  => 200,
+                'message'   => 'OK'
+            ],
+            'message'   => 'Cashier dashboard'
+        ];
+
+        $date_fin = date('Y-m-d', strtotime('+1 days'));
+        $date_debut = date('Y-m-d', strtotime('-6 days'));
+
+        $liaisons = Liaison::where([['shop_id', $shop_id], ['purchases', 1]])
+            ->whereBetween('created_at', [$date_debut, $date_fin])
+            ->orderBy('created_at', 'desc')
+            ->get()
+            ->load('user');
+        $liaisons = $liaisons->groupBy('date');
+
+        $purchases = Article_shop::where('shop_id', $shop_id)
+            ->whereBetween('date', [$date_debut, $date_fin])
+            ->orderBy('created_at', 'desc')
+            ->get()
+            ->load('user', 'article', 'color', 'liaison');
+
+        return response()->json([
+            'meta' => $meta,
+            'data' => ['liaisons' => $liaisons, 'purchases' => $purchases]
         ]);
     }
 
@@ -103,8 +136,7 @@ class ShopsController extends Controller
         $validation = Validator::make($request->all(),[
             'name'       => 'required|string',
             'location'       => 'required|string',
-            'phone'       => 'required|string|max:30',
-            'email'       => 'required|string'
+            'phone'       => 'required|string|max:30'
         ]);
 
         $meta = [

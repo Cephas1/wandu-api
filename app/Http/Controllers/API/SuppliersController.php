@@ -44,8 +44,7 @@ class SuppliersController extends Controller
         $validation = Validator::make($request->all(),[
             'name'       => 'required|string',
             'location'       => 'required|string',
-            'phone'       => 'required|string|max:30',
-            'email'       => 'required|string'
+            'phone'       => 'required|string|max:30'
         ]);
 
         $meta = [

@@ -51,10 +51,13 @@ class LoginController extends Controller
         $username = $request['username'];
         $password = $request['password'];
 
-        $user = User::where('name', $username)->get()->first()->load('rule');
+        $user = User::where('name', $username)->get()->first();
 
         if($user && $user->actif == 1){
-            if(!Hash::check($password, $user->password)){                
+            
+            $user->load('rule');
+
+            if(!Hash::check($password, $user->password)){
 
                 $meta['message'] = "Bad credentials";
                 return response()->json([

@@ -85,7 +85,10 @@ class PurchasesController extends Controller
             "name"      => "PU" . rand(1, 99) . now()->dayOfYear,
             "number"    => rand(1, 99999999999),
             "purchases" => 1,
-            "shop_id"   => $meta_data["shop_id"]
+            "shop_id"   => $meta_data["shop_id"],
+            "user_id"   => $meta_data["user_id"],
+            "date"      => date('Y-m-d'),
+            "time"      => date('H:i:s')
         );
         $liaison = Liaison::create($liaison);
 
@@ -126,6 +129,90 @@ class PurchasesController extends Controller
     }
 
     /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+
+        $meta = [
+            'status' => [
+                'code'  => 200,
+                'message'   => 'OK'
+            ],
+            'message'   => 'Failure request'
+        ];
+
+        $liaison = Liaison::find($id);
+
+        $meta_data = $request["meta_data"];
+        $new_purchases = $request["purchases"];
+
+        $old_purchases = Article_shop::where('liaison_id', $liaison->id)->get();
+
+        for($i = 0; $i < count($new_purchases); $i++)
+        {
+            $purchase_id = $new_purchases[$i]["purchase_id"];
+            $purchase_article_id = $new_purchases[$i]["article_id"];
+            $purchase_color_id = $new_purchases[$i]["color_id"];
+            $purchase_quantity = $new_purchases[$i]["quantity"];
+            $purchase_price_got = $new_purchases[$i]["price_got"];
+
+            foreach($old_purchases as $purchase){
+                if($purchase->id == $purchase_id){
+
+                    if($purchase->color_id == $purchase_color_id){
+
+                        $container = Container::where([
+                            ["shop_id", $purchase->shop_id],
+                            ["article_id", $purchases[$i]["article_id"]],
+                            ["color_id", $new_purchases[$i]["color_id"]]
+                        ])->first();
+
+                        $container->quantity = $container->quantity + ($purchase_quantity - $purchase->quantity);
+                        $container->save();
+                    }else{
+
+                        $container = Container::where([
+                            ["shop_id", $purchase->shop_id],
+                            ["article_id", $purchase->article_id],
+                            ["color_id", $purchase->color_id]
+                        ])->first();
+
+                        $container->quantity = $container->quantity + $purchase->quantity;
+                        $container->save();
+
+                        $container = Container::where([
+                            ["shop_id", $purchase->shop_id],
+                            ["article_id", $purchase->article_id],
+                            ["color_id", $new_purchases[$i]["color_id"]]
+                        ])->first();
+
+                        $container->quantity = $container->quantity - $purchase_quantity;
+                        $container->save();
+
+                    }
+
+                    $purchase->article_id = $new_purchases[$i]["article_id"];
+                    $purchase->color_id = $new_purchases[$i]["color_id"];
+                    $purchase->quantity = $new_purchases[$i]["quantity"];
+                    $purchase->price_got = $new_purchases[$i]["price_got"];
+
+                    $purchase->save();
+                }
+            }
+        }
+
+
+        return response()->json([
+            'meta' => $meta
+        ]);
+    }
+
+    /**
      * Display the list of purchase of specified liaison resource.
      * Need liaison int $id
      *
@@ -151,18 +238,6 @@ class PurchasesController extends Controller
             'meta' => $meta,
             'data' => $purchases
         ]);
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
     }
 
     /**

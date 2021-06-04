@@ -6,8 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Liaison extends Model
 {
-    protected $fillable = ["name", "number", "storage_id", "shop_id", "supplier_id", "deliverances", "provides", "purchases"];
+    protected $fillable = ["name", "number", "storage_id", "user_id", "shop_id", "supplier_id", "deliverances", "provides", "purchases", "date", "time"];
     protected $hidden = ["deleted_at"];
+
+    public function user(){
+        return $this->belongsTo('App\User');
+    }
 
     public function supplier(){
         return $this->belongsTo('App\Models\Supplier');

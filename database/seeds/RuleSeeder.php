@@ -27,5 +27,9 @@ class RuleSeeder extends Seeder
             'name' => 'Technicien',
             'code'  => 'Tech'
         ]);
+        DB::table('rules')->insert([
+            'name' => 'Agent depot',
+            'code'  => 'AD'
+        ]);
     }
 }
