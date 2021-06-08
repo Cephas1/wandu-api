@@ -36,5 +36,7 @@ Route::namespace('WEB')->group(function (){
 
 Route::middleware(['auth'])->namespace('WEB')->group(function (){
     Route::get('/basket', 'BasketsController@index')->name('basket.index');
+    Route::get('/basket/remove/{product_id}', 'BasketsController@remove');
+    Route::get('/basket/remove', 'BasketsController@removeAll');
     Route::post('/basket', 'BasketsController@store')->name('basket.store');
 });

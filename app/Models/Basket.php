@@ -9,7 +9,7 @@ class Basket extends Model
     protected $guarded = [];
 
     public function article(){
-        return $this->belongsTo('App\Models\User');
+        return $this->belongsTo('App\Models\Article');
     }
 
     public function user(){

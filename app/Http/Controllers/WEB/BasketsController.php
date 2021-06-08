@@ -16,9 +16,32 @@ class BasketsController extends Controller
      */
     public function index()
     {
-        $articles = Basket::where([['user_id', Auth::id()],['canceled_at', null], ['bought_at', null]])->get();
+        $baskets = Basket::where([['user_id', Auth::id()],['canceled_at', null], ['bought_at', null]])->get();
 
-        return view('products.index', compact('articles'));
+        return view('basket', compact('baskets'));
+    }
+
+    /**
+     * Store a the command resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function storeCommand(Request $request)
+    {
+        $baskets = Basket::where([['user_id', Auth::id()],['canceled_at', null], ['bought_at', null]])->get();
+
+        $removed = 0;
+        foreach($baskets as $basket)
+        {
+            $basket->bought_at = date('Y-m-d');
+            $basket->montant = $basket->quantity * $basket->article->price_4;
+            $basket->save();
+
+            $removed = 1;
+        }
+
+        return response()->json($removed);
     }
 
     /**
@@ -50,10 +73,14 @@ class BasketsController extends Controller
     {
         $article = Basket::where([['user_id', Auth::id()], ['article_id', $product_id],['canceled_at', null], ['bought_at', null]])->first();
 
-        $article->canceled_at = date('Y-m-d');
-        $article->save();
+        $removed = 0;
+        if($article){
+            $article->canceled_at = date('Y-m-d');
+            $article->save();
+            $removed = 1;
+        }
 
-        return redirect()->back();
+        return response()->json($removed);
     }
 
     /**
@@ -65,12 +92,14 @@ class BasketsController extends Controller
     {
         $articles = Basket::where([['user_id', Auth::id()], ['canceled_at', null], ['bought_at', null]])->get();
 
+        $removed = 0;
         foreach($articles as $article)
         {
             $article->canceled_at = date('Y-m-d');
             $article->save();
+            $removed = 1;
         }
 
-        return redirect()->back();
+        return response()->json($removed);
     }
 }
