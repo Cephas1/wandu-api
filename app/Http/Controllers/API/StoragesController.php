@@ -161,8 +161,6 @@ class StoragesController extends Controller
             'message'   => 'Storage dashboard'
         ];
 
-        //$storage_id = 6;
-
         $storage = Storage::select(['id' ,'name', 'location', 'phone', 'email'])->firstWhere('id',$id);
 
         $approvisionnements = Storage_supplier::where('storage_id', $id)->orderBy('date', 'desc')->get();
@@ -200,4 +198,46 @@ class StoragesController extends Controller
             ]
         ]);
     }
+
+    /**
+         * Store the picture
+         * @param \Illuminate\Http\Request $request
+         * @return \Illuminate\Http\Response
+         */
+
+         public function storePicture(Request $request, $id) {
+
+            $meta = [
+                'status' => [
+                    'code'  => 200,
+                    'message'   => 'OK'
+                ],
+                'message'   => "Error file"
+            ];
+
+            $file = $request->file("image");
+
+            if($file != null){
+
+                $storage = Storage::find($id);
+
+                $image = $storage->id.'.'.$file->getClientOriginalExtension();
+
+                if (!file_exists(public_path('images\storages'))) {
+                    mkdir(public_path('images\storages'));
+                }
+
+                $file->move(public_path('images\storages'), $image);
+                $storage->image = "images\storages\\".$image;
+                $saved = $storage->save();
+
+                if($saved){
+                    $meta['message'] = "File saved";
+                }
+            }
+
+            return response()->json([
+                'meta' => $meta
+            ]);
+         }
 }

@@ -8,9 +8,9 @@ use Illuminate\Support\Facades\Storage;
 
 class PictureController extends Controller
 {
-    public function getPicture(Request $request) {
+    public function getPicture($path) {
 
-        $ab_path = public_path($request['image']);
+        $ab_path = public_path(str_replace('$','\\',$path));
 
         return response()->file($ab_path);
         //return response()->json($ab_path);

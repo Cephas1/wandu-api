@@ -139,11 +139,8 @@ class PurchasesController extends Controller
     {
 
         $meta = [
-            'status' => [
-                'code'  => 200,
-                'message'   => 'OK'
-            ],
-            'message'   => 'Failure request'
+            'code'  => 200,
+            'message'   => 'OK'
         ];
 
         $liaison = Liaison::find($id);
@@ -168,11 +165,11 @@ class PurchasesController extends Controller
 
                         $container = Container::where([
                             ["shop_id", $purchase->shop_id],
-                            ["article_id", $purchases[$i]["article_id"]],
-                            ["color_id", $new_purchases[$i]["color_id"]]
+                            ["article_id", $purchase_article_id],
+                            ["color_id", $purchase_color_id]
                         ])->first();
 
-                        $container->quantity = $container->quantity + ($purchase_quantity - $purchase->quantity);
+                        $container->quantity = $container->quantity + ($purchase->quantity - $purchase_quantity);
                         $container->save();
                     }else{
 
@@ -182,17 +179,21 @@ class PurchasesController extends Controller
                             ["color_id", $purchase->color_id]
                         ])->first();
 
-                        $container->quantity = $container->quantity + $purchase->quantity;
-                        $container->save();
+                        if($container){
+                            $container->quantity = $container->quantity + $purchase->quantity;
+                            $container->save();
+                        }
 
-                        $container = Container::where([
+                        $_container = Container::where([
                             ["shop_id", $purchase->shop_id],
                             ["article_id", $purchase->article_id],
                             ["color_id", $new_purchases[$i]["color_id"]]
                         ])->first();
 
-                        $container->quantity = $container->quantity - $purchase_quantity;
-                        $container->save();
+                        if($_container){
+                            $_container->quantity = $_container->quantity - $purchase_quantity;
+                            $_container->save();
+                        }
 
                     }
 
@@ -207,9 +208,7 @@ class PurchasesController extends Controller
         }
 
 
-        return response()->json([
-            'meta' => $meta
-        ]);
+        return response()->json($meta);
     }
 
     /**

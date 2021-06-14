@@ -242,4 +242,46 @@ class ShopsController extends Controller
             'data' => 'id : ' . $id
         ]);
     }
+
+    /**
+         * Store the picture
+         * @param \Illuminate\Http\Request $request
+         * @return \Illuminate\Http\Response
+         */
+
+         public function storePicture(Request $request, $id) {
+
+            $meta = [
+                'status' => [
+                    'code'  => 200,
+                    'message'   => 'OK'
+                ],
+                'message'   => "Error file"
+            ];
+
+            $file = $request->file("image");
+
+            if($file != null){
+
+                $shop = Shop::find($id);
+
+                $image = $shop->id.'.'.$file->getClientOriginalExtension();
+
+                if (!file_exists(public_path('images\shops'))) {
+                    mkdir(public_path('images\shops'));
+                }
+
+                $file->move(public_path('images\shops'), $image);
+                $shop->image = "images\shops\\".$image;
+                $saved = $shop->save();
+
+                if($saved){
+                    $meta['message'] = "File saved";
+                }
+            }
+
+            return response()->json([
+                'meta' => $meta
+            ]);
+         }
 }

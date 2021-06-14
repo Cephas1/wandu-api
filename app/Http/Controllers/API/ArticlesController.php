@@ -204,4 +204,46 @@ class ArticlesController extends Controller
             'data' => 'id : ' . $id
         ]);
     }
+
+    /**
+         * Store the picture
+         * @param \Illuminate\Http\Request $request
+         * @return \Illuminate\Http\Response
+         */
+
+         public function storePicture(Request $request, $id) {
+
+            $meta = [
+                'status' => [
+                    'code'  => 200,
+                    'message'   => 'OK'
+                ],
+                'message'   => "Error file"
+            ];
+
+            $file = $request->file("image");
+
+            if($file != null){
+
+                $article = Article::find($id);
+
+                $image = $article->id.'.'.$file->getClientOriginalExtension();
+
+                if (!file_exists(public_path('images\articles'))) {
+                    mkdir(public_path('images\articles'));
+                }
+
+                $file->move(public_path('images\articles'), $image);
+                $article->image = "images\articles\\".$image;
+                $saved = $article->save();
+
+                if($saved){
+                    $meta['message'] = "File saved";
+                }
+            }
+
+            return response()->json([
+                'meta' => $meta
+            ]);
+         }
 }

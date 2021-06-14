@@ -88,9 +88,6 @@ class SuppliersController extends Controller
      */
     public function show($id)
     {
-        $supplier = Supplier::where([['deleted_at', null],['id', $id]])->first();
-        $supplies = null;
-
         $meta = [
             'status' => [
                 'code'  => 200,
@@ -98,20 +95,36 @@ class SuppliersController extends Controller
             ],
             'message'   => 'No data corresponded'
         ];
+
+        $supplier = Supplier::where([['deleted_at', null],['id', $id]])->first();
+        $supplies = null;
+
+
         if($supplier != null){
+            $liaisons = [];
             $meta['message'] = "Supplier's details";
 
-            $supplies = Storage_supplier::where('supplier_id', $id)->get();
-            $supplies = $supplies->groupBy('liaison_id');
-            $supplies = $supplies->toArray();
+            $provides = Storage_supplier::where('supplier_id', $id)->get()->load('liaison', 'storage', 'user', 'color', 'article');
+            $supplies = $provides->groupBy('liaison_id');
+
+            foreach($supplies as $key => $values){
+                $liaisons[] = [
+                    'liaison_id' => $key,
+                    'liaison_name' => $values[0]['liaison']['name'],
+                    'liaison_date' => $values[0]['liaison']['date'],
+                    'storage' => $values[0]['storage']['name'],
+                    'user' => $values[0]['user']['name'],
+                ];
+            }
         }
 
         return response()->json([
             'meta' => $meta,
             'data' => [
                 'supplier' => $supplier,
-                'supplies' => $supplies
-                ]
+                'liaisons'  => $liaisons,
+                'supplies' => $provides
+            ]
         ]);
     }
 
@@ -157,4 +170,45 @@ class SuppliersController extends Controller
             'data' => 'id : ' . $id
         ]);
     }
+    /**
+         * Store the picture
+         * @param \Illuminate\Http\Request $request
+         * @return \Illuminate\Http\Response
+         */
+
+         public function storePicture(Request $request, $id) {
+
+            $meta = [
+                'status' => [
+                    'code'  => 200,
+                    'message'   => 'OK'
+                ],
+                'message'   => "Error file"
+            ];
+
+            $file = $request->file("image");
+
+            if($file != null){
+
+                $supplier = Supplier::find($id);
+
+                $image = $supplier->id.'.'.$file->getClientOriginalExtension();
+
+                if (!file_exists(public_path('images\suppliers'))) {
+                    mkdir(public_path('images\suppliers'));
+                }
+
+                $file->move(public_path('images\suppliers'), $image);
+                $supplier->image = "images\suppliers\\".$image;
+                $saved = $supplier->save();
+
+                if($saved){
+                    $meta['message'] = "File saved";
+                }
+            }
+
+            return response()->json([
+                'meta' => $meta
+            ]);
+         }
 }
