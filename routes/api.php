@@ -76,11 +76,11 @@ Route::middleware('auth:api')->namespace('API')->group(function (){
 
     // Picture's routes
     Route::get('/getpicture/{path}', 'PictureController@getPicture');
-    Route::post('/storepicture/users/{id}', 'UsersController@storePicture');
-    Route::post('/storepicture/articles/{id}', 'ArticlesControllersersController@storePicture');
-    Route::post('/storepicture/suppliers/{id}', 'SuppliersControllersersController@storePicture');
-    Route::post('/storepicture/storages/{id}', 'StoragesControllersersController@storePicture');
-    Route::post('/storepicture/shops/{id}', 'ShopsControllersController@storePicture');
+    Route::post('/picture/users/{id}', 'UsersController@storePicture');
+    Route::post('/picture/articles/{id}', 'ArticlesController@storePicture');
+    Route::post('/picture/suppliers/{id}', 'SuppliersController@storePicture');
+    Route::post('/picture/storages/{id}', 'StoragesController@storePicture');
+    Route::post('/picture/shops/{id}', 'ShopsController@storePicture');
 
     // Notification's route
     Route::get('/notifications/{id}', 'NotificationController@getDetails');

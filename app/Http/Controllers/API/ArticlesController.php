@@ -65,11 +65,11 @@ class ArticlesController extends Controller
 
         if($validation->fails()){
 
-            $meta['status']['message'] = 'Validation error';
-            $meta['message'] = $validation->errors();
+            $meta['message'] = 'Validation error';
 
             return response()->json([
-                'meta'  => $meta
+                'meta'  => $meta,
+                'data'  => $validation->errors()
             ]);
         }
 
@@ -80,7 +80,6 @@ class ArticlesController extends Controller
             'price_2'     => $request['price_2'],
             'price_3'     => $request['price_3'],
             'price_4'     => $request['price_4'],
-            'quantity'     => 0,
             'category_id'     => $request['category_id'],
         ];
 
@@ -170,7 +169,69 @@ class ArticlesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $validation = Validator::make($request->all(),[
+            'name'       => 'required|string',
+            'description'       => 'nullable|string|min:3',
+            'price_1'       => 'required|integer',
+            'price_2'       => 'required|integer',
+            'price_3'       => 'required|integer',
+            'price_4'       => 'required|integer',
+            'category_id'       => 'required|integer',
+            'image_uri'       => 'nullable|image'
+        ]);
+
+        $meta = [
+            'status' => [
+                'code'  => 200,
+                'message'   => 'OK'
+            ],
+            'message'   => 'Article saved successful'
+        ];
+
+        if($validation->fails()){
+
+            $meta['message'] = 'Validation error';
+
+            return response()->json([
+                'meta'  => $meta,
+                'data'  => $validation->errors()
+            ]);
+        }
+
+        $product = Article::find($id);
+
+        $product->name = $request['name'];
+        $product->description = $request['description'];
+        $product->price_1 = $request['price_1'];
+        $product->price_2 = $request['price_2'];
+        $product->price_3 = $request['price_3'];
+        $product->price_4 = $request['price_4'];
+        $product->category_id = $request['category_id'];
+
+        $product->save();
+
+        return response()->json([
+            'meta' => $meta
+        ]);
+    }
+
+    public function edit($id) {
+
+        $product = Article::find($id);
+        $categories = Category::orderBy('name')->get();
+
+        $meta = [
+            'status' => [
+                'code'  => 200,
+                'message'   => 'OK'
+            ],
+            'message'   => "Article's categories"
+        ];
+
+        return response()->json([
+            'meta' => $meta,
+            'data' => ['categories' => $categories, 'product' => $product]
+        ]);
     }
 
     /**
@@ -234,7 +295,7 @@ class ArticlesController extends Controller
                 }
 
                 $file->move(public_path('images\articles'), $image);
-                $article->image = "images\articles\\".$image;
+                $article->imageuri = "images\articles\\".$image;
                 $saved = $article->save();
 
                 if($saved){

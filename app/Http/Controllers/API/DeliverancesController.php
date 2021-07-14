@@ -18,7 +18,7 @@ class DeliverancesController extends Controller
      */
     public function index()
     {
-        $deliverance_liaisons = Liaison::where([["deliverances","=", 1],["storage_id", "=", 1]])->orderBy('created_at', 'desc')->get()->load("shop", "shop_storage.article", "shop_storage.color");
+        $deliverance_liaisons = Liaison::where("deliverances","=", 1)->orderBy('created_at', 'desc')->get()->load("shop", "shop_storage.article", "shop_storage.color");
 
         $meta = [
             'status' => [
