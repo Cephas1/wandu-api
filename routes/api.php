@@ -15,8 +15,31 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::post('/login', 'API\Auth\LoginController@getToken');
+Route::post('/lite/login', 'API\Auth\LoginController@getToken');
 
 Route::middleware('auth:api')->namespace('API')->group(function (){
+
+    Route::prefix('lite')->namespace('Lite')->group(function () {
+        Route::resource('articles', 'ArticlesController');
+        Route::resource('categories', 'CategoriesController');
+        Route::resource('suppliers', 'SuppliersController');
+        Route::get('/containers/shop/{id}', 'ContainersController@showShopContainer');
+        Route::get('/inventaire/{shop_id}/{first_date}/{last_date}', 'ComptaController@shop_inventaire');
+        Route::get('/supplies', 'SuppliesController@index');
+        Route::get('/supplies/create', 'SuppliesController@create');
+        Route::post('/supplies', 'SuppliesController@store');
+        Route::get('/purchases/{shop_id}', 'ShopsController@cashier');
+        Route::post('/purchases', 'ShopsController@store');
+        Route::get('/fond/{shop_id}/{mnt}', 'ShopsController@fond');
+        Route::get('/fond/{shop_id}', 'ShopsController@isFond');
+
+        // User's route
+        Route::get('/users', 'UsersController@index')->name('users');
+        Route::get('/users/{id}', 'UsersController@show');
+        Route::put('/users/actif/{id}', 'UsersController@desactiveOrActiveUser')->name('users.actif');
+        Route::put('/users/password/{id}', 'UsersController@changePassword')->name('users.password');
+        Route::get('/users/password/reset/{id}', 'UsersController@resetPassword');
+    });
 
     Route::post('/register', 'Auth\RegisterController@create');
 

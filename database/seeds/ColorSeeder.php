@@ -15,8 +15,7 @@ class ColorSeeder extends Seeder
 
         for($i = 1; $i <= 20; $i++){
             DB::table('colors')->insert([
-                'name' => $faker->colorName,
-                'hexa'  => $faker->hexcolor
+                'name' => $faker->colorName
             ]);
         }
     }

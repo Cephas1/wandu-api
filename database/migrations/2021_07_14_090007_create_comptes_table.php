@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateColorsTable extends Migration
+class CreateComptesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,14 @@ class CreateColorsTable extends Migration
      */
     public function up()
     {
-        Schema::create('colors', function (Blueprint $table) {
+        Schema::create('comptes', function (Blueprint $table) {
             $table->id();
-            $table->string("name");
-            $table->dateTime("deleted_at")->nullable();
+            $table->string('name');
+            $table->string('email');
+            $table->string('siege');
+            $table->string('adresse');
+            $table->string('tel');
+            $table->boolean('actif')->default(1);
             $table->timestamps();
         });
     }
@@ -28,6 +32,6 @@ class CreateColorsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('colors');
+        Schema::dropIfExists('comptes');
     }
 }

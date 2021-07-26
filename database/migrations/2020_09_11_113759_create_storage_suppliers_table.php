@@ -23,7 +23,7 @@ class CreateStorageSuppliersTable extends Migration
             $table->integer("user_id");
             $table->date("date");
             $table->time("time");
-            $table->integer("quantity");
+            $table->float("quantity", 8, 2);
             $table->integer("price_gave");
             $table->dateTime("deleted_at")->nullable();
             $table->timestamps();

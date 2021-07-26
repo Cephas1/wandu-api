@@ -16,11 +16,11 @@ class CreateArticleShopsTable extends Migration
         Schema::create('article_shops', function (Blueprint $table) {
             $table->id();
             $table->integer("article_id");
-            $table->integer("color_id")->default("1");
+            $table->integer("color_id")->default(0);
             $table->integer("shop_id");
             $table->integer("liaison_id");
             $table->integer("user_id");
-            $table->integer("quantity");
+            $table->float("quantity", 8, 2);
             $table->integer("price_got");
             $table->dateTime("deleted_at")->nullable();
             $table->timestamps();
