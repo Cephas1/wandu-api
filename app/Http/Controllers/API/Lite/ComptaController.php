@@ -51,33 +51,19 @@ class ComptaController extends Controller
             
             $quantity = 0;
             $recette = 0;
+            $cout = 0;
             foreach($values as $value){
                 $quantity = $quantity + $value->quantity;
                 $recette = $recette + ($value->quantity * $value->price_got);
+                $cout = $cout + ($value->quantity * $value->price_gave);
             }
-            $ventes[] = ['article' => $key, 'sorties' => $quantity, 'gain' => $recette];
+            $ventes[] = ['article' => $key, 'sorties' => $quantity,'cout' => $cout, 'marge' => $recette - $cout, 'gain' => $recette];
         }
         // Fin du traitement des ventes
 
-        // Debut du traitement du stock disponible
-        $container = Container::where('shop_id', $shop_id)->get()->load('article');
-        $container = $container->groupBy('article.name');
-        
-        $stock = [];
-        foreach($container as $key => $values){
-            $quantity = 0;
-            $valeur = 0;
-            foreach($values as $value){
-                $quantity = $quantity + $value->quantity;
-                $valeur = $valeur + ($value->quantity * $value->article->price_2);
-            }
-            $stock[] = ['article' => $key, 'quantity' => $quantity, 'value' => $valeur];
-        }
-        // Fin du traitement du stock disponible
-
         return response()->json([
             'meta' => $meta,
-            'data' => ['entrees' => $livraisons, 'sorties' => $ventes, 'container' => $stock]
+            'data' => ['entrees' => $livraisons, 'sorties' => $ventes]
         ]);
     }
 }

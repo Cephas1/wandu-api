@@ -20,10 +20,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3615ce3b-5cdd-4a88-847a-5ad3531456aa" name="Default" comment="">
+      <change afterPath="$PROJECT_DIR$/database/migrations/2021_06_14_123225_add_column_image_to_suppliers_table.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/articles/10.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/articles/11.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/articles/4.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/suppliers/1.jpg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/API/PictureController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/API/PictureController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/API/PurchasesController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/API/PurchasesController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/API/SuppliersController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/API/SuppliersController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/API/ArticlesController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/API/ArticlesController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/API/DeliverancesController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/API/DeliverancesController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/migrations/2020_09_11_111743_create_containers_table.php" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/public/images/users/1.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/public/images/users/1.jpg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/routes/api.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/api.php" afterDir="false" />
     </list>
@@ -133,7 +138,14 @@
       <option name="project" value="LOCAL" />
       <updated>1622831407312</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Add storePicture in all entities who can have picture(article, supplier, shop and storage)">
+      <created>1623666819381</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1623666819381</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -160,13 +172,18 @@
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="Correcting bugs" />
     <MESSAGE value="Aquila first commit" />
-    <option name="LAST_COMMIT_MESSAGE" value="Aquila first commit" />
+    <MESSAGE value="Add storePicture in all entities who can have picture(article, supplier, shop and storage)" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add storePicture in all entities who can have picture(article, supplier, shop and storage)" />
   </component>
   <component name="WindowStateProjectService">
     <state x="137" y="14" width="1092" height="714" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1622117649715">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="137" y="14" width="1092" height="714" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1366.728@0.0.1366.728" timestamp="1622117649715" />
+    <state x="429" y="84" key="RollbackChangesDialog" timestamp="1625222524461">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state x="429" y="84" key="RollbackChangesDialog/0.0.1366.728@0.0.1366.728" timestamp="1625222524461" />
     <state x="184" y="9" key="SettingsEditor" timestamp="1622117827474">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
@@ -179,6 +196,10 @@
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="465" y="265" key="git4idea.remote.GitConfigureRemotesDialog/0.0.1366.728@0.0.1366.728" timestamp="1623228364209" />
+    <state x="339" y="162" key="run.anything.popup" timestamp="1623666039277">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state x="339" y="162" key="run.anything.popup/0.0.1366.728@0.0.1366.728" timestamp="1623666039277" />
     <state x="346" y="49" width="672" height="678" key="search.everywhere.popup" timestamp="1622736205005">
       <screen x="0" y="0" width="1366" height="728" />
     </state>

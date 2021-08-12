@@ -30,8 +30,14 @@ Route::middleware('auth:api')->namespace('API')->group(function (){
         Route::post('/supplies', 'SuppliesController@store');
         Route::get('/purchases/{shop_id}', 'ShopsController@cashier');
         Route::post('/purchases', 'ShopsController@store');
+        Route::post('/dettes', 'ShopsController@dette');
+        Route::post('/reglements', 'ShopsController@storeReglementDette');
+        Route::get('/dettes/{shop_id}', 'ShopsController@getDette');
         Route::get('/fond/{shop_id}/{mnt}', 'ShopsController@fond');
         Route::get('/fond/{shop_id}', 'ShopsController@isFond');
+        Route::get('/clients', 'ClientsController@index');
+        Route::post('/clients', 'ClientsController@store');
+        Route::get('/clients/{id}', 'ClientsController@show');
 
         // User's route
         Route::get('/users', 'UsersController@index')->name('users');

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Article_shop extends Model
 {
-    protected $fillable = ["article_id","date","quantity","price_got","shop_id","user_id","liaison_id", "color_id", "dtn", "time"];
+    protected $guarded = [];
     protected $hidden = ["deleted_at"];
 
     public function article(){
@@ -19,6 +19,10 @@ class Article_shop extends Model
 
     public function liaison(){
         return $this->belongsTo('App\Models\Liaison');
+    }
+
+    public function client(){
+        return $this->belongsTo('App\Models\Client');
     }
 
     public function user(){

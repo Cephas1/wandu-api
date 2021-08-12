@@ -7,6 +7,7 @@ use App\Models\Article;
 use App\Models\Color;
 use App\Models\Container;
 use App\Models\Liaison;
+use App\Models\Lot;
 use App\Models\Shop_storage;
 use App\Models\Storage_supplier;
 use App\Models\Supplier;
@@ -101,6 +102,13 @@ class SuppliesController extends Controller
 
         for($i = 0; $i < count($supplies); $i++)
         {
+            // Save Lot
+            $lt = array(
+                'name'      => 'LT' . rand(1, 99) . now()->dayOfYear,
+                'price_gave'    => $supplies[$i]["price_gave"]
+            );
+            $lot = Lot::create($lt);
+
             // save supply
             $supply = array(
                 "liaison_id"        => $liaison->id,
@@ -111,6 +119,7 @@ class SuppliesController extends Controller
                 "supplier_id"        => $meta_data["supplier_id"],
                 "storage_id"        => $meta_data["storage_id"],
                 "user_id"        => $meta_data["user_id"],
+                "lot_id"        => $lot->id,
                 "date"        => date('Y-m-d'),
                 "time"        => date('H:i:s')
             );
@@ -118,31 +127,20 @@ class SuppliesController extends Controller
 
             if($supply)
             {
-                // Add the provided article to the container(Stock) of a specific storage
-                $container = Container::where([
-                    ["storage_id", $supply->storage_id],
-                    ["article_id", $supply->article_id],
-                    ["color_id", 0]
-                ])->first();
-
-                if($container){
-                    $container->quantity = $container->quantity + $supply->quantity;
-                    $container->save();
-                }else{
-                    $container = array(
-                        "article_id"        => $supply->article_id,
-                        "storage_id"        => $supply->storage_id,
-                        "color_id"          => $supply->color_id,
-                        "quantity"          => $supply->quantity
-                    );
-                    Container::create($container);
-                }
+                
+                $container = array(
+                    "article_id"        => $supply->article_id,
+                    "storage_id"        => $supply->storage_id,
+                    "color_id"          => $supply->color_id,
+                    "lot_id"            => $lot->id,
+                    "quantity"          => $supply->quantity
+                );
+                Container::create($container);
                 
                 $article = Article::find($supply->article_id);
                 $article->price_1 = $supplies[$i]['price_gave'];
                 $article->price_2 = $supplies[$i]['price_vente'];
                 $article->mb = $supplies[$i]['marge_brute'];
-
                 $article->save();
 
                 // Create the reference of deliverance (Storage to Shop)
@@ -176,31 +174,22 @@ class SuppliesController extends Controller
                 $storage_container = Container::where([
                     ["storage_id", $deliverance->storage_id],
                     ["article_id", $deliverance->article_id],
+                    ["lot_id", $lot->id],
                     ["color_id", $deliverance->color_id]
                 ])->first();
     
                 $storage_container->quantity = $storage_container->quantity - $deliverance->quantity;
                 $storage_container->save();
-    
-                // Increment the specific container of shop
-                $shop_container = Container::where([
-                    ["shop_id", $deliverance->shop_id],
-                    ["article_id", $deliverance->article_id],
-                    ["color_id", $deliverance->color_id]
-                ])->first();
-    
-                if($shop_container){
-                    $shop_container->quantity = $shop_container->quantity + $deliverance->quantity;
-                    $shop_container->save();
-                }else{
-                    $new_shop_container = array(
-                        "article_id"    => $deliverance->article_id,
-                        "color_id"      => $deliverance->color_id,
-                        "shop_id"       => $deliverance->shop_id,
-                        "quantity"      => $deliverance->quantity
-                    );
-                    Container::create($new_shop_container);
-                }
+                
+                $shop_container = array(
+                    "article_id"    => $deliverance->article_id,
+                    "color_id"      => $deliverance->color_id,
+                    "shop_id"       => $deliverance->shop_id,
+                    "quantity"      => $deliverance->quantity,
+                    "lot_id"        => $lot->id,
+                );
+                Container::create($shop_container);
+
                 $meta['message'] = "Supply saved successful";
             }
         }

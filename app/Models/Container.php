@@ -8,6 +8,10 @@ class Container extends Model
 {
     protected $guarded = [];
 
+    public function lot(){
+        return $this->belongsTo('App\Models\Lot');
+    }
+
     public function article(){
         return $this->belongsTo('App\Models\Article');
     }

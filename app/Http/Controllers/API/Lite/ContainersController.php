@@ -38,6 +38,30 @@ class ContainersController extends Controller
     public function showShopContainer($id)
     {
         $container = Container::where('shop_id', $id)->orderBy('updated_at', 'desc')->get()->load('article.category', 'article.rubrique');
+        $container = $container->groupBy('article_id');
+
+        $c = [];
+        foreach($container as $key => $values){
+
+            $qte = 0;
+            foreach($values as $value){
+                $qte = $qte + $value->quantity;
+            }
+
+            if ($qte > 0){
+                $c[] = [
+                    'article' => $values[0]->article->name,
+                    'article_id' => $values[0]->article->id,
+                    'price_1'      => $values[0]->article->price_1,
+                    'price_2'      => $values[0]->article->price_2,
+                    'category'      => $values[0]->article->category->name,
+                    'category_id'      => $values[0]->article->category->id,
+                    'rubrique_id'      => $values[0]->article->rubrique->id,
+                    'rubrique'      => $values[0]->article->rubrique->name,
+                    'quantity' => $qte
+                ];
+            }
+        }
 
         $meta = [
             'status' => [
@@ -49,7 +73,7 @@ class ContainersController extends Controller
 
         return response()->json([
             'meta' => $meta,
-            'data' => $container
+            'data' => $c
         ]);
     }
 }
