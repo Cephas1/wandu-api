@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\Route;
 Route::post('/login', 'API\Auth\LoginController@getToken');
 Route::post('/lite/login', 'API\Auth\LoginController@getToken');
 
+
+
 Route::middleware('auth:api')->namespace('API')->group(function (){
 
     Route::prefix('lite')->namespace('Lite')->group(function () {

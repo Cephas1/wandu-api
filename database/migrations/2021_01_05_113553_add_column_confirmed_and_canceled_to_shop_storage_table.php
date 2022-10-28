@@ -15,7 +15,7 @@ class AddColumnConfirmedAndCanceledToShopStorageTable extends Migration
     {
         Schema::table('shop_storages', function (Blueprint $table) {
             $table->boolean('confirmed')->default(0)->after('user_id');
-            $table->boolean('conceled')->default(0)->after('user_id');
+            $table->boolean('canceled')->default(0)->after('user_id');
         });
     }
 
